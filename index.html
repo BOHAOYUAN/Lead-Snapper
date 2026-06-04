@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeadSniper — Elite B2B Lead Intent Radar for X & LinkedIn</title>
+  <meta name="description" content="Stop cold emailing dead databases. Scan real-time social signals, lock high-intent buyers, and generate custom AI outreach drafts on autopilot.">
+  
+  <!-- Modern Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #05050a;
+      --surface: #0b0b14;
+      --border: #1a1a2e;
+      --accent: #ff2e4c;
+      --accent-dim: rgba(255, 46, 76, 0.15);
+      --neon-green: #00ff9d;
+      --neon-cyan: #00e5ff;
+      --text: #e0e0e0;
+      --text-dim: #8888a0;
+      --glow: 0 0 20px rgba(255, 46, 76, 0.3);
+      --font-sans: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-display: 'Orbitron', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Cyberpunk Scanline overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 229, 255, 0.01) 2px, rgba(0, 229, 255, 0.01) 4px);
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navigation */
+    header {
+      padding: 30px 0;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5, 5, 10, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 22px;
+      background: linear-gradient(135deg, var(--accent), #ff6b81, var(--neon-cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--neon-cyan);
+    }
+
+    .btn-nav {
+      background: transparent;
+      border: 1px solid var(--neon-green);
+      color: var(--neon-green) !important;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .btn-nav:hover {
+      background: rgba(0, 255, 157, 0.1);
+      box-shadow: 0 0 10px rgba(0, 255, 157, 0.2);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 100px 0 60px 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 100px;
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      color: #ffffff;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-dim);
+      max-width: 800px;
+      margin: 0 auto 40px auto;
+      font-weight: 300;
+    }
+
+    .cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #ff6b81);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      border-radius: 4px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 0 30px rgba(255, 46, 76, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 45px rgba(255, 46, 76, 0.7);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: white;
+      border: 1px solid var(--border);
+      padding: 16px 36px;
+      border-radius: 4px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 229, 255, 0.05);
+    }
+
+    /* Video Section */
+    .video-container {
+      max-width: 800px;
+      margin: 0 auto 100px auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 229, 255, 0.05);
+      aspect-ratio: 16 / 9;
+      position: relative;
+      background: #000;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Problem / Solution Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 100px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 10px 30px rgba(0, 229, 255, 0.05);
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      font-size: 32px;
+      color: var(--neon-cyan);
+      margin-bottom: 24px;
+      font-family: var(--font-mono);
+    }
+
+    .feature-card h3 {
+      font-size: 22px;
+      color: white;
+      margin-bottom: 16px;
+      font-family: var(--font-display);
+    }
+
+    .feature-card p {
+      color: var(--text-dim);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* Pricing Section */
+    .pricing-section {
+      padding: 100px 0;
+      background: radial-gradient(circle at center, rgba(255, 46, 76, 0.03) 0%, transparent 70%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      margin-bottom: 100px;
+    }
+
+    .pricing-card {
+      max-width: 550px;
+      margin: 0 auto;
+      background: rgba(11, 11, 20, 0.8);
+      backdrop-filter: blur(12px);
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 50px 40px;
+      box-shadow: var(--glow);
+      position: relative;
+    }
+
+    .pricing-card::before {
+      content: 'LIMITED PRE-RELEASE';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: bold;
+      padding: 4px 16px;
+      border-radius: 100px;
+      letter-spacing: 2px;
+    }
+
+    .pricing-card h3 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 56px;
+      font-weight: 800;
+      color: white;
+      margin: 20px 0;
+      font-family: var(--font-mono);
+    }
+
+    .price span {
+      font-size: 16px;
+      color: var(--text-dim);
+      font-family: var(--font-sans);
+      font-weight: 400;
+    }
+
+    .price-original {
+      text-decoration: line-through;
+      color: var(--text-dim);
+      font-size: 18px;
+      margin-top: -10px;
+      margin-bottom: 20px;
+      display: block;
+      font-family: var(--font-mono);
+    }
+
+    .pricing-features {
+      list-style: none;
+      text-align: left;
+      max-width: 400px;
+      margin: 30px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pricing-features li {
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--neon-green);
+      font-weight: bold;
+    }
+
+    .guarantee-badge {
+      margin-top: 30px;
+      font-size: 12px;
+      color: var(--neon-green);
+      border: 1px dashed rgba(0, 255, 157, 0.3);
+      padding: 12px;
+      border-radius: 6px;
+      background: rgba(0, 255, 157, 0.02);
+    }
+
+    /* Legal/Compliance Info Section (Mandatory for Dodo Payments/Stripe/etc) */
+    .compliance-section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .compliance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      text-align: left;
+    }
+
+    .compliance-card {
+      background: rgba(11, 11, 20, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 30px;
+    }
+
+    .compliance-card h4 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      color: white;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .compliance-card p, .compliance-card li {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    
+    .compliance-card ul {
+      list-style-position: inside;
+      margin-bottom: 10px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 60px 0;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
+      font-family: var(--font-mono);
+      border-top: 1px solid var(--border);
+    }
+
+    footer p {
+      margin-bottom: 10px;
+    }
+
+    footer a {
+      color: var(--neon-cyan);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-wrapper">
+      <div class="logo-container">
+        <span class="logo">LEADSNIPER</span>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#demo">Demo</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="https://checkout.dodopayments.com/buy/pdt_0NgJ1kQ2U5WMQAWcHf193?quantity=1" class="btn-nav">Buy License</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <span class="badge">Active Signal Intelligence</span>
+      <h1>Stop Cold Emailing.<br>Lock Target with <span>LeadSniper</span></h1>
+      <p class="hero-subtitle">
+        The browser-native tactical intent radar for B2B founders. Scan real-time pain points on Twitter (X) and LinkedIn, identify high-value buyers, and craft flawless AI outreach in 3 seconds.
+      </p>
+      <div class="cta-group">
+        <a href="https://checkout.dodopayments.com/buy/pdt_0NgJ1kQ2U5WMQAWcHf193?quantity=1" class="btn-primary">Get Lifetime Access</a>
+        <a href="#demo" class="btn-secondary">Watch Scanner Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Video Section -->
+  <section id="demo" class="container" style="margin-bottom: 100px;">
+    <h2 style="text-align: center; font-family: var(--font-display); font-size: 28px; margin-bottom: 40px;">How It Works</h2>
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/io9djVhzxf8" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section id="features" class="container">
+    <h2 style="text-align: center; font-family: var(--font-display); font-size: 28px; margin-bottom: 60px;">Weapon of Choice for Outbound Growth</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">01 //</div>
+        <h3>3D WebGL Intent Radar</h3>
+        <p>Watch social feeds convert into an immersive, spatial dashboard. Concentric rings map leads based on context relevance and potential deal size, visualising raw feeds into actionable data targets.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">02 //</div>
+        <h3>High-Intent AI Scoring</h3>
+        <p>Retrieve and score social updates automatically using custom prompts. Filter out newsletters, threads, and self-promotion. Focus 100% of your outbound effort on warm pain points.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">03 //</div>
+        <h3>One-Click Outreach Engine</h3>
+        <p>Generates three distinct contextual copy-and-paste outreach drafts (Professional, Witty, or Storytelling) based on the user's immediate post history. Instant insertion saves hours of writing time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">04 //</div>
+        <h3>Continuous Database Sync</h3>
+        <p>Fully supports custom webhook endpoints (Notion, Make.com, Airtable, CRMs). Automatically push lead metadata, contact details, and custom drafts to your active pipelines in one click.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="pricing-section">
+    <div class="container">
+      <h2 style="font-family: var(--font-display); font-size: 36px; margin-bottom: 10px;">Founding Seats Lifetime Offer</h2>
+      <p style="color: var(--text-dim); margin-bottom: 50px; font-weight: 300;">Limited to the first 30 early adopters. Transitioning to $49/mo thereafter.</p>
+      
+      <div class="pricing-card">
+        <h3>LTD PRO ACCESS</h3>
+        <span class="price-original">Standard $499.00 USD</span>
+        <div class="price">$299.00 <span>USD / One-time</span></div>
+        <p style="color: var(--neon-cyan); font-family: var(--font-mono); font-size: 13px; margin-bottom: 20px;">Or CN¥2,200 equivalent at checkout</p>
+        
+        <ul class="pricing-features">
+          <li>Lifetime license with 3 active installations limit</li>
+          <li>Real-time 3D WebGL radar visualization</li>
+          <li>DeepSeek V3 / OpenAI custom endpoint support (BYOK)</li>
+          <li>Automated lead scoring & noise elimination</li>
+          <li>1-Click make.com/Notion Webhook CRM syncing</li>
+          <li>Free lifetime system updates</li>
+        </ul>
+        
+        <a href="https://checkout.dodopayments.com/buy/pdt_0NgJ1kQ2U5WMQAWcHf193?quantity=1" class="btn-primary" style="display: block; margin-top: 30px;">Buy License Key</a>
+        
+        <div class="guarantee-badge">
+          🛡️ <b>30-Day Money-Back Guarantee:</b> If you don't close at least one client with LeadSniper within 30 days of setup, we'll refund 100% of your payment.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compliance & Legal Info Section (Required by Payment Gateways) -->
+  <section class="compliance-section">
+    <div class="container">
+      <h2 style="text-align: center; font-family: var(--font-display); font-size: 24px; margin-bottom: 40px; color: var(--text-dim);">Merchant & Compliance Terms</h2>
+      <div class="compliance-grid">
+        
+        <div class="compliance-card">
+          <h4>Terms of Service</h4>
+          <p>By purchasing and using LeadSniper ("the Software"), you agree to these terms:</p>
+          <ul>
+            <li>You are granted a non-exclusive license to use the Software on up to 3 personal devices.</li>
+            <li>You agree not to reverse engineer or illegally resell the packaged assets.</li>
+            <li>The Software acts as an interface to third-party LLMs (DeepSeek/OpenAI); you are responsible for maintaining your own API key usage.</li>
+          </ul>
+        </div>
+        
+        <div class="compliance-card">
+          <h4>Privacy Policy</h4>
+          <p>We respect your privacy absolute:</p>
+          <ul>
+            <li>All personal keys (API keys, webhooks) are saved locally within your browser secure extension storage.</li>
+            <li>We do NOT track or store your scans, leads, or generated outreach content on external servers.</li>
+            <li>All payment data is handled securely by our merchant of record, Dodo Payments. We do not store credit card info.</li>
+          </ul>
+        </div>
+
+        <div class="compliance-card">
+          <h4>Refund & Support</h4>
+          <p><b>Refund Policy:</b> We offer a full, no-questions-asked 30-day money-back guarantee. If you are unsatisfied, contact us within 30 days of purchase for a 100% refund.</p>
+          <p><b>Business Details:</b></p>
+          <p>Company: HY Digital Studio</p>
+          <p>Primary Support: <a href="mailto:hy@hydigital.studio">hy@hydigital.studio</a></p>
+          <p>Alternative: <a href="mailto:haoyuanbo626@gmail.com">haoyuanbo626@gmail.com</a></p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 HY Digital Studio. All rights reserved.</p>
+      <p>Powered by <a href="https://dodopayments.com" target="_blank" rel="noopener">Dodo Payments</a> Merchant of Record.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
