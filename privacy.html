@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeadSniper — Privacy Policy</title>
+  <meta name="description" content="Privacy Policy for LeadSniper B2B Lead Intent Radar. Learn how we handle and protect your locally stored data.">
+  
+  <!-- Modern Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #05050a;
+      --surface: #0b0b14;
+      --border: #1a1a2e;
+      --accent: #ff2e4c;
+      --accent-dim: rgba(255, 46, 76, 0.15);
+      --neon-green: #00ff9d;
+      --neon-cyan: #00e5ff;
+      --text: #e0e0e0;
+      --text-dim: #8888a0;
+      --glow: 0 0 20px rgba(255, 46, 76, 0.3);
+      --font-sans: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-display: 'Orbitron', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.7;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Cyberpunk Scanline overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 229, 255, 0.01) 2px, rgba(0, 229, 255, 0.01) 4px);
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    header {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5, 5, 10, 0.8);
+      backdrop-filter: blur(12px);
+      margin-bottom: 40px;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 22px;
+      background: linear-gradient(135deg, var(--accent), #ff6b81, var(--neon-cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+
+    .btn-back {
+      background: transparent;
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .btn-back:hover {
+      background: rgba(0, 229, 255, 0.1);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff, var(--text-dim));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .last-updated {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--neon-green);
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--neon-cyan);
+      border-radius: 8px 0 0 8px;
+    }
+
+    .card.alert::before {
+      background: var(--neon-green);
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+      color: var(--text-dim);
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: var(--neon-cyan);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      color: var(--neon-green);
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container" style="padding: 0 24px; max-width: 800px; margin: 0 auto;">
+      <div class="logo-container">
+        <a href="index.html" class="logo">LEADSNIPER</a>
+        <a href="index.html" id="btn-back-home" class="btn-back">&larr; Back to Home</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Privacy Policy</h1>
+    <div class="last-updated">Last Updated: June 5, 2026</div>
+
+    <div class="card alert">
+      <h2>1. Tactical Summary (TL;DR)</h2>
+      <p>We respect your privacy absolutely. LeadSniper is a browser-native extension built with a <b>"Zero-Server" architecture</b>. We do not store, upload, sell, or monitor your social media scans, custom webhooks, or API credentials on external servers. All operations happen inside your browser.</p>
+    </div>
+
+    <div class="card">
+      <h2>2. What Data We Process & Where It Stays</h2>
+      <p>LeadSniper operates directly on your local device. Below is a breakdown of the specific items and how they are handled:</p>
+      <ul>
+        <li><strong>API Credentials:</strong> Your custom LLM API keys (such as DeepSeek or OpenAI keys) are stored locally and encrypted using standard Chrome/Edge Extension Secure Storage APIs. They are only sent directly to the respective official API endpoints.</li>
+        <li><strong>Intent & Scans:</strong> Social media posts scanned on Twitter (X), LinkedIn, or Reddit are processed in memory to calculate lead scores. Once you close the tab, this data is discarded. We never upload your scans to our own servers.</li>
+        <li><strong>Outreach Copy:</strong> Draft messages generated by our AI system are injected directly into your local browser's reply box. No copies are saved anywhere outside your device.</li>
+        <li><strong>Custom Webhooks:</strong> If you use Discord, Slack, or webhook integrations to export leads, the payload is fired directly from your local browser to your configured destination.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>3. Payment & Subscription Processing</h2>
+      <p>All subscription processing and license key generation are securely managed by our Merchant of Record, <a href="https://dodopayments.com" target="_blank" rel="noopener">Dodo Payments</a>. 
+      During checkout, you will provide payment and billing details directly to Dodo Payments. LeadSniper does not see, store, or process your credit card or full billing information.</p>
+    </div>
+
+    <div class="card">
+      <h2>4. Data Sharing & Third Parties</h2>
+      <p>Because we do not collect your personal information or usage logs, we have nothing to sell or share. 
+      The only third-party interactions initiated by the Software are:</p>
+      <ul>
+        <li>Requests to your configured AI Provider (e.g., DeepSeek API) to generate outreach drafts.</li>
+        <li>Requests to Dodo Payments API to verify the validity of your License Key.</li>
+        <li>Direct requests to your self-configured webhook endpoints.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>5. Compliance with Developer Policies</h2>
+      <p>We certify that we fully comply with the Microsoft Edge Add-ons Developer Policies and Chrome Web Store User Data Policies:</p>
+      <ul>
+        <li>We do not sell or transfer user data to third parties.</li>
+        <li>We do not use or transfer user data for purposes unrelated to the extension's core functionality (B2B lead intent scanning and reply assistance).</li>
+        <li>We do not use user data to determine creditworthiness or for lending purposes.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>6. Contact Us</h2>
+      <p>If you have any questions or feedback regarding our privacy practices, please contact us at:</p>
+      <p><strong>HY Digital Studio</strong><br>
+      Email: <a href="mailto:hy@hydigital.studio">hy@hydigital.studio</a><br>
+      Alternative: <a href="mailto:haoyuanbo626@gmail.com">haoyuanbo626@gmail.com</a></p>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 HY Digital Studio. All rights reserved.</p>
+      <p>LeadSniper is powered by Dodo Payments Merchant of Record.</p>
+    </footer>
+  </main>
+
+</body>
+</html>
