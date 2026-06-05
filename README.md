@@ -11,12 +11,11 @@
   </a>
 </p>
 
----
-
-## 📺 Watch LeadSniper in Action (60s Demo)
-
-> [!TIP]
-> **[Click here to watch the 60-second system demo video (Loom/YouTube)]** — See how the 3D Radar tracks real-time intent posts and drafts professional B2B outreach in 3 seconds.
+### 📥 What happens after you purchase:
+* You will be **instantly redirected to a download page** to fetch your product.
+* You will receive a secure `.zip` file containing the `LeadSniper/` extension folder and an interactive HTML installation guide.
+* You install it securely via Chrome/Edge developer mode — **no executable scripts, no installers, 100% safe**.
+* You will also receive a **License Key** and a receipt from Dodo Payments in your email immediately.
 
 ---
 
@@ -26,8 +25,16 @@ We believe in absolute transparency and user-controlled data security:
 
 * **BYOK (Bring Your Own Key):** You connect directly to DeepSeek/OpenAI using your own local API key. No markup on token prices, and zero API vendor lock-in.
 * **100% Client-Side:** No database, no tracking cookies, and no middleman servers. Your API keys, webhook URLs, and scanned leads are stored in your browser's secure local storage (`chrome.storage.local`).
-* **Visual Installation:** The software is delivered as an open directory. No suspicious `.bat` or `.exe` installer scripts. You inspect the code and load it directly using the browser's official **Developer Mode**.
-* **🛡️ 30-Day Money-Back Guarantee:** If you don't close at least one client using LeadSniper within 30 days of setup, email us at `hy@hydigital.studio` for a **100% instant refund**.
+* **Visual & Safe Installation:** The software is delivered as an open directory. No suspicious `.bat` or `.exe` installer scripts. You inspect the code and load it directly using the browser's official **Developer Mode**.
+* **🛡️ 30-Day No-Questions-Asked Refund:** If LeadSniper doesn't save you time or meet your expectations, simply email us at `hy@hydigital.studio` within 30 days and we'll refund every cent. No hassle, no interrogation.
+* **Privacy First:** We respect your privacy. [Read our Privacy Policy](https://bohaoyuan.github.io/LeadSniper/privacy.html) before you purchase.
+
+---
+
+## 📺 Watch LeadSniper in Action (60s Demo)
+
+> [!TIP]
+> **[Click here to watch the 60-second system demo video (Loom/YouTube)]** — See how the 3D Radar tracks real-time intent posts and drafts professional B2B outreach in 3 seconds.
 
 ---
 
@@ -57,6 +64,22 @@ When you purchase a license, you will receive a ZIP containing the `LeadSniper/`
 4. **Load the Extension:** Click **Load unpacked** on the top-left, and select the unzipped `LeadSniper/` folder.
 
 Pin LeadSniper to your browser toolbar, click it, enter your **Dodo Payments License Key**, and start hunting!
+
+---
+
+## ❓ Frequently Asked Questions
+
+**Q: How do I install it? Is it safe?**
+A: You load it as an unpacked extension via Chrome/Edge developer mode — the same way developers test their own extensions. No executable scripts, no installers. Plus, all your API keys and configuration data stay 100% locally on your machine (BYOK).
+
+**Q: What is "Bring Your Own Key" (BYOK)?**
+A: You use your own DeepSeek or OpenAI API key. The plugin connects directly to the AI provider and never sends your data or prompts to our servers. Your API usage is billed directly and transparently by the AI vendor (e.g. $0.01 per dozen scans).
+
+**Q: Is this a subscription?**
+A: No. It's a one-time purchase of $299 (or $199 during the early bird pre-release). You get lifetime access to all core features with no recurring monthly fees.
+
+**Q: What if I have trouble installing?**
+A: The download package includes a detailed visual guide (`How-to-Install.html`). If you still need help, simply email us at [hy@hydigital.studio](mailto:hy@hydigital.studio) and we will assist you.
 
 ---
 
