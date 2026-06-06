@@ -39,6 +39,9 @@ We believe in absolute transparency and user-controlled data security:
   </a>
 </p>
 
+> [!IMPORTANT]
+> **BYOK (Bring Your Own Key) & 100% Privacy:** LeadSniper runs completely inside your browser. Your API keys, webhook URLs, and leads stay locally on your device secure storage. Nothing is ever sent to our servers.
+
 > [!TIP]
 > **[Click here to watch the 60-second system demo video on YouTube]** — See how the 3D Radar tracks real-time intent posts, locks targets, and drafts professional B2B outreach in 3 seconds.
 
