@@ -118,3 +118,4 @@ If you have questions, feedback, or want to discuss growth marketing:
 * 📧 Email: [hy@hydigital.studio](mailto:hy@hydigital.studio)
 * 💼 LinkedIn: [Connect on LinkedIn](https://www.linkedin.com/in/haoyuan-bo-127908392/)
 * 👾 Reddit: [Follow on Reddit](https://www.reddit.com/user/Early_Maintenance_81/)
+* 🐦 Twitter (X): [Follow on Twitter](https://x.com/bo_haoyuan94776)
