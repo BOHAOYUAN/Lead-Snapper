@@ -33,8 +33,14 @@ We believe in absolute transparency and user-controlled data security:
 
 ## 📺 Watch LeadSniper in Action (60s Demo)
 
+<p align="center">
+  <a href="https://youtu.be/0jcrtVPJz0o" target="_blank">
+    <img src="https://img.youtube.com/vi/0jcrtVPJz0o/maxresdefault.jpg" alt="Watch LeadSniper Demo Video" width="100%" style="border-radius: 8px; border: 1px solid #ff2e4c;">
+  </a>
+</p>
+
 > [!TIP]
-> **[Click here to watch the 60-second system demo video (Loom/YouTube)]** — See how the 3D Radar tracks real-time intent posts and drafts professional B2B outreach in 3 seconds.
+> **[Click here to watch the 60-second system demo video on YouTube]** — See how the 3D Radar tracks real-time intent posts, locks targets, and drafts professional B2B outreach in 3 seconds.
 
 ---
 
