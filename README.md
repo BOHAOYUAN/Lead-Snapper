@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://checkout.dodopayments.com/buy/pdt_0NgNoZpvOKdipx3cyM5dX?quantity=1">
-    <img src="https://img.shields.io/badge/Get%20Lifetime%20Access-%2499%20USD-ff2e4c?style=for-the-badge&logo=appveyor" alt="Buy Lifetime License">
+    <img src="https://img.shields.io/badge/Get%20Lifetime%20Access-from%20%24199%20USD-ff2e4c?style=for-the-badge&logo=appveyor" alt="Buy Lifetime License">
   </a>
   <a href="https://bohaoyuan.github.io/LeadSniper/">
     <img src="https://img.shields.io/badge/Live%20Website-bohaoyuan.github.io-00e5ff?style=for-the-badge&logo=google-chrome" alt="Live Landing Page">
@@ -90,7 +90,7 @@ A: You use your own DeepSeek or OpenAI API key. The plugin connects directly to 
 **Q: Is this a subscription?**
 A: No. It is a lifetime license buy-out. We offer two pricing tiers:
 * **LTD Basic ($199 one-time)**: Core features, 1 active installation limit, excludes Auto-Pilot.
-* **LTD Pro ($99 one-time Founding Special // normally $499)**: All features, 3 active installations limit, includes Semi-Autonomous Auto-Pilot.
+* **LTD Pro ($588 one-time Founding Special // normally $999)**: All features, 3 active installations limit, includes Semi-Autonomous Auto-Pilot.
 
 **Q: What if I have trouble installing?**
 A: The download package includes a detailed visual guide (`How-to-Install.html`). If you still need help, simply email us at [hy@hydigital.studio](mailto:hy@hydigital.studio) and we will assist you.
