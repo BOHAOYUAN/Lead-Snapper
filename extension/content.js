@@ -487,11 +487,7 @@ function injectAutoPilotReadyBadge(editor, postEl) {
   badge.innerHTML = `🛰️ LeadSniper Auto-Filled (Ready to Send)`;
   
   const parent = editor.parentElement;
-  if (parent) {
-    parent.appendChild(badge);
-  } else {
-    editor.after(badge);
-  }
+  editor.after(badge);
   
   if (!document.getElementById('ls-badge-styles')) {
     const style = document.createElement('style');
@@ -530,6 +526,7 @@ async function typeIntoEditor(editor, text, postEl) {
   const cleanup = () => {
     editor.removeEventListener('keydown', interruptHandler, { capture: true });
     editor.removeEventListener('mousedown', interruptHandler, { capture: true });
+    editor.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: ' ', keyCode: 32 }));
     injectAutoPilotReadyBadge(editor, postEl);
   };
   
