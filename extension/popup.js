@@ -92,7 +92,12 @@ chrome.storage.local.get([...Object.values(STORAGE_KEYS), 'leadsniper_active', '
   $licenseKey.value = result[STORAGE_KEYS.LICENSE] || '';
   $niche.value      = result[STORAGE_KEYS.NICHE]   || 'AI Automation and SaaS Growth';
   if ($valueProp)  $valueProp.value  = result[STORAGE_KEYS.VALUE_PROP] || '';
-  if ($webhookUrl) $webhookUrl.value = result[STORAGE_KEYS.WEBHOOK] || '';
+  let webhookVal = result[STORAGE_KEYS.WEBHOOK] || '';
+  if (webhookVal === 'https://x.com/home' || webhookVal === 'https://api.hubspot.com/webhooks/leadsniper') {
+    webhookVal = '';
+    chrome.storage.local.set({ [STORAGE_KEYS.WEBHOOK]: '' });
+  }
+  if ($webhookUrl) $webhookUrl.value = webhookVal;
   if ($autoSync)   $autoSync.checked = result[STORAGE_KEYS.AUTO_SYNC] !== false; // default true
   if ($muteSoundSwitch) $muteSoundSwitch.checked = result[STORAGE_KEYS.MUTE_SOUND] === true;
   if ($blacklistKeywords) $blacklistKeywords.value = result[STORAGE_KEYS.BLACKLIST] || '';
