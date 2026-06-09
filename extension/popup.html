@@ -2,331 +2,748 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=400">
-  <title>LeadSniper — Elite Command Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>LeadSniper Command Center</title>
+  <!-- Google Fonts + Font Awesome 6 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&display=swap');
-
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-    :root {
-      --bg:        #0a0a0f;
-      --surface:   #111119;
-      --border:    #1e1e2e;
-      --accent:    #ff2e4c;
-      --accent-dim:#ff2e4c55;
-      --neon-green:#00ff9d;
-      --neon-cyan: #00e5ff;
-      --text:      #e0e0e0;
-      --text-dim:  #666680;
-      --glow:      0 0 15px var(--accent-dim), 0 0 40px #ff2e4c22;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
+      background: #F1F5F9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      padding: 0;
       width: 380px;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      overflow-x: hidden;
+    }
+
+    /* Scrollable Container suitable for Chrome extension popups */
+    .plugin-container {
+      width: 380px;
+      background: #FFFFFF;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scrollable-content {
+      max-height: 580px;
+      overflow-y: auto;
+      padding: 16px;
+      scrollbar-width: thin;
+    }
+
+    .scrollable-content::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .scrollable-content::-webkit-scrollbar-track {
+      background: #E9EEF3;
+      border-radius: 10px;
+    }
+
+    .scrollable-content::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 10px;
+    }
+
+    /* Header styling */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 8px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-logo {
+      background: #0F172A;
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 5px 10px;
+      border-radius: 40px;
+      letter-spacing: -0.2px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      display: flex;
+      align-items: center;
+    }
+
+    .scan-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #F1F5F9;
+      padding: 4px 8px;
+      border-radius: 40px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10B981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);}
+      70% { transform: scale(1); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0);}
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);}
+    }
+
+    .switch-mini {
       position: relative;
+      display: inline-block;
+      width: 28px;
+      height: 15px;
+      margin-left: 2px;
     }
 
-    body::before {
-      content: ''; position: fixed; inset: 0;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,157,0.015) 2px, rgba(0,255,157,0.015) 4px);
-      pointer-events: none; z-index: 9999;
+    .switch-mini input {
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
 
-    .container {
-      position: relative; z-index: 1; padding: 20px;
-      display: flex; flex-direction: column; gap: 12px;
+    .slider-mini {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #cbd5e1;
+      transition: .3s;
+      border-radius: 34px;
     }
 
-    .header { display: flex; align-items: center; gap: 10px; }
-    .header .logo {
-      font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 20px;
-      background: linear-gradient(135deg, var(--accent), #ff6b81, var(--neon-cyan));
-      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); animation: pulse-dot 2s infinite; }
-    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.5} }
-    
-    /* Toggle Switch */
-    .master-switch { display: flex; align-items: center; gap: 10px; margin-left: auto; }
-    .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; inset: 0; background-color: #333; transition: .4s; border-radius: 34px; border: 1px solid var(--border); }
-    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 4px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background-color: var(--accent); border-color: var(--accent); animation: breathing-glow 2s infinite ease-in-out; }
-    input:checked + .slider:before { transform: translateX(20px); }
-    .master-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-    input:checked ~ .master-label { color: var(--accent); }
-
-    @keyframes breathing-glow {
-      0%, 100% { box-shadow: 0 0 5px var(--accent), 0 0 15px var(--accent-dim); }
-      50% { box-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent); }
+    .slider-mini:before {
+      position: absolute;
+      content: "";
+      height: 11px;
+      width: 11px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
     }
 
-    /* Elite Tier Pricing Indicator */
-    .tier-badge {
-      background: rgba(0, 255, 157, 0.04); border: 1px solid var(--border); padding: 5px 8px; border-radius: 4px;
-      font-size: 9px; display: flex; justify-content: space-between; align-items: center; margin-top: -4px;
+    .switch-mini input:checked + .slider-mini {
+      background-color: #10B981;
+    }
+
+    .switch-mini input:checked + .slider-mini:before {
+      transform: translateX(13px);
+    }
+
+    .tier-badge-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #FEF9E6 0%, #FFF6E0 100%);
+      padding: 6px 12px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid #FEF3C7;
+    }
+
+    .tier-pro {
+      color: #B45309;
+      background: #FFEDD5;
+      padding: 2px 8px;
+      border-radius: 30px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .upgrade-btn {
+      background: none;
+      border: none;
+      color: #F97316;
+      font-weight: 700;
+      font-size: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* Cards */
+    .card-section {
+      background: #FFFFFF;
+      border: 1px solid #E9EDF2;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
       letter-spacing: 0.5px;
+      color: #5B6E8C;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .field-group { display: flex; flex-direction: column; gap: 5px; }
-    .field-group label { font-size: 10px; text-transform: uppercase; color: var(--neon-cyan); font-weight: 700; letter-spacing: 0.5px; }
-    
-    .field-header { display: flex; justify-content: space-between; align-items: center; }
-    .secure-badge { font-size: 9px; color: var(--neon-green); opacity: 0.85; font-weight: 400; text-transform: none; display: flex; align-items: center; gap: 3px; }
-    .auto-sync-checkbox { font-size: 9px; color: var(--neon-green); display: flex; align-items: center; gap: 4px; cursor: pointer; text-transform: none; font-weight: bold; }
-
-    input, textarea {
-      width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
-      color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 8px 10px; outline: none;
-    }
-    input:focus, textarea:focus { border-color: var(--accent); box-shadow: var(--glow); }
-
-    textarea { height: 70px; resize: vertical; }
-
-    .row { display: flex; gap: 10px; }
-    .row .field-group { flex: 1; }
-
-    .input-with-btn { display: flex; gap: 6px; position: relative; }
-    .input-with-btn input { flex: 1; }
-    
-    .btn-test {
-      background: var(--surface); border: 1px solid var(--border); color: var(--neon-cyan);
-      font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 10px; padding: 0 12px;
-      border-radius: 4px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
-    }
-    .btn-test:hover {
-      border-color: var(--neon-cyan); background: rgba(0, 229, 255, 0.1); box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+    /* Segmented Control Mode Switcher */
+    .mode-switch-group {
+      display: flex;
+      gap: 8px;
+      background: #F8FAFE;
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid #E9EDF2;
+      margin-bottom: 10px;
     }
 
-    /* Advanced Settings Folded */
-    .advanced-settings {
-      background: rgba(17, 17, 25, 0.6); border: 1px solid var(--border); border-radius: 4px; padding: 6px 10px;
+    .mode-option {
+      flex: 1;
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      transition: 0.2s;
+      background: transparent;
+      color: #5A6E8C;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
     }
-    .advanced-settings summary {
-      font-size: 10px; color: var(--text-dim); cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
-      outline: none; user-select: none; font-weight: 700; transition: color 0.3s;
-    }
-    .advanced-settings summary:hover { color: var(--neon-cyan); }
-    .advanced-settings[open] summary { margin-bottom: 8px; color: var(--neon-cyan); }
 
-    .btn-save {
-      width: 100%; padding: 11px; border: 1px solid var(--accent); border-radius: 4px; background: transparent;
-      color: var(--accent); font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer;
-      transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 2px;
+    .mode-option.active {
+      background: #FFFFFF;
+      color: #1E3A8A;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05), 0 0 0 1px #E2E8F0;
     }
-    .btn-save:hover { background: linear-gradient(135deg, var(--accent), #ff6b81); color: #fff; box-shadow: var(--glow); }
 
-    .footer-signature {
-      text-align: center; font-size: 9px; color: var(--text-dim); margin-top: 2px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;
+    /* Toggle Checkbox style matching B2B theme */
+    .checkbox-switch {
+      position: relative;
+      display: inline-block;
+      width: 34px;
+      height: 20px;
     }
-    .footer-signature b { color: var(--accent); text-shadow: 0 0 8px var(--accent-dim); }
+
+    .checkbox-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .checkbox-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #e2e8f0;
+      transition: .3s;
+      border-radius: 34px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .checkbox-slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .checkbox-switch input:checked + .checkbox-slider {
+      background-color: #2563EB;
+      border-color: #2563EB;
+    }
+
+    .checkbox-switch input:checked + .checkbox-slider:before {
+      transform: translateX(14px);
+    }
+
+    /* Slider / Steppers */
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+
+    .label-icon {
+      font-weight: 600;
+      font-size: 11px;
+      color: #1F2A44;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .slider-value {
+      background: #F1F5F9;
+      padding: 2px 8px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #2563EB;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #2563EB;
+      margin-top: 4px;
+      cursor: pointer;
+    }
+
+    .draft-progress {
+      background: #EFF3F8;
+      border-radius: 30px;
+      height: 6px;
+      width: 100%;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: #2563EB;
+      width: 0%;
+      height: 6px;
+      border-radius: 30px;
+      transition: width 0.3s ease;
+    }
+
+    /* inputs & buttons */
+    .license-area {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .license-input {
+      flex: 1;
+      background: #F9FBFE;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: #334155;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .license-input:focus {
+      border-color: #2563EB;
+      background: #ffffff;
+    }
+
+    .btn-primary {
+      background: #1E3A8A;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 11px;
+      font-family: 'Inter', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-primary:hover {
+      background: #1E40AF;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s;
+      color: #475569;
+    }
+
+    .btn-outline:hover {
+      background: #F1F5F9;
+      border-color: #94A3B8;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 11px;
+      font-family: 'Inter', sans-serif;
+      resize: vertical;
+      background: #FEFEFE;
+      outline: none;
+      transition: border-color 0.2s;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    textarea:focus {
+      border-color: #2563EB;
+    }
+
+    /* Style Tags Selector */
+    .tag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .style-tag {
+      background: #F1F5F9;
+      padding: 5px 12px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: #475569;
+      border: 1px solid transparent;
+    }
+
+    .style-tag:hover {
+      background: #E2E8F0;
+    }
+
+    .style-tag.active {
+      background: #1E3A8A;
+      color: white;
+      box-shadow: 0 2px 4px rgba(30, 58, 138, 0.15);
+    }
+
+    /* Caveats */
+    .safety-note {
+      background: #FEFCE8;
+      border-left: 3px solid #EAB308;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 10px;
+      color: #4B5563;
+      line-height: 1.4;
+      margin-top: 8px;
+    }
+
+    /* Action Buttons Footer */
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn-launch {
+      background: #0F172A;
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      gap: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+    }
+
+    .btn-launch:hover {
+      background: #1E293B;
+    }
+
+    .btn-secondary {
+      background: white;
+      border: 1px solid #CBD5E1;
+      padding: 8px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 11px;
+      color: #334155;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .btn-secondary:hover {
+      background: #F1F5F9;
+    }
+
+    footer {
+      font-size: 9px;
+      text-align: center;
+      margin-top: 14px;
+      color: #94A3B8;
+      border-top: 1px solid #ECF3F9;
+      padding-top: 10px;
+      line-height: 1.4;
+    }
 
     .toast {
-      position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%);
-      background: var(--neon-green); color: #000; font-weight: 700; font-size: 11px;
-      padding: 8px 20px; border-radius: 4px; transition: bottom 0.4s; z-index: 10000;
-      box-shadow: 0 0 15px rgba(0,255,157,0.4);
+      position: fixed;
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1E293B;
+      color: #F9FAFB;
+      font-weight: 600;
+      font-size: 11px;
+      padding: 8px 16px;
+      border-radius: 30px;
+      transition: bottom 0.3s ease-out;
+      z-index: 100000;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .toast.show { bottom: 16px; }
 
-    /* Custom green toggle for Auto-Pilot */
-    #autoPilotSwitch:checked + .slider {
-      background-color: var(--neon-green);
-      border-color: var(--neon-green);
-      animation: breathing-glow-green 2s infinite ease-in-out;
-    }
-    @keyframes breathing-glow-green {
-      0%, 100% { box-shadow: 0 0 5px var(--neon-green), 0 0 15px rgba(0, 255, 157, 0.4); }
-      50% { box-shadow: 0 0 15px var(--neon-green), 0 0 30px var(--neon-green); }
+    .toast.show {
+      bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+<div class="plugin-container">
+  <div class="scrollable-content">
+    <!-- Header -->
     <div class="header">
-      <span class="logo">LEADSNIPER 3.0</span>
-      <span class="status-dot"></span>
-      <div class="master-switch">
-        <label class="switch">
-          <input type="checkbox" id="masterSwitch" checked>
-          <span class="slider"></span>
-        </label>
-        <span class="master-label">Scanning</span>
+      <div class="logo-area">
+        <div class="badge-logo"><i class="fas fa-bullseye" style="margin-right: 6px;"></i>LeadSniper 3.0</div>
+        <div class="scan-status">
+          <span class="pulse-dot" id="statusDot"></span>
+          <span style="margin-right: 4px;">SCANNING</span>
+          <label class="switch-mini">
+            <input type="checkbox" id="masterSwitch" checked>
+            <span class="slider-mini"></span>
+          </label>
+        </div>
       </div>
     </div>
 
-    <!-- Tiered Pricing Framework Indicator -->
-    <div class="tier-badge">
-      <span>TIER: <b style="color:var(--neon-green)">LTD PRO ($99)</b></span>
-      <span style="color:var(--text-dim)">|</span>
-      <span style="color:var(--neon-cyan)">50 FOUNDING SEATS LEFT</span>
+    <!-- Active Tier badge -->
+    <div class="tier-badge-container">
+      <span><i class="fas fa-crown" style="color: #F59E0B;"></i> TIER: <span id="tierBadgeText">LTD PRO ($99)</span></span>
+      <span class="tier-pro" id="seatsBadge"><i class="fas fa-chair"></i> 50 founding seats left</span>
+      <button class="upgrade-btn" id="upgradeBtn" style="display:none;">UPGRADE <i class="fas fa-arrow-right"></i></button>
     </div>
 
-    <!-- Auto-Hunter Switch -->
-    <div style="background: rgba(255, 46, 76, 0.05); border: 1px dashed var(--accent-dim); padding: 8px 12px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
-      <label style="color: var(--accent); font-weight: bold; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">⚡ AUTO-HUNTER MODE (SCROLL BOT)</label>
-      <label class="switch">
-        <input type="checkbox" id="autoHunterSwitch">
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <!-- Mute Sound Alert -->
-    <div style="background: rgba(0, 229, 255, 0.05); border: 1px dashed rgba(0, 229, 255, 0.3); padding: 8px 12px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-      <label style="color: var(--neon-cyan); font-weight: bold; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">🔇 MUTE SOUND ALERT</label>
-      <label class="switch">
-        <input type="checkbox" id="muteSoundSwitch">
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <!-- Auto-Pilot Mode (Semi-Autonomous) -->
-    <div style="background: rgba(0, 255, 157, 0.03); border: 1px dashed rgba(0, 255, 157, 0.3); padding: 8px 12px; border-radius: 4px; display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <div style="display: flex; align-items: center;">
-          <label style="color: var(--neon-green); font-weight: bold; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">🛰️ AUTO-PILOT MODE (SEMI-AUTO)</label>
-          <span id="autoPilotLock" style="color: #ff2e4c; margin-left: 6px; cursor: pointer; font-size: 11px; display: inline-block;" title="Upgrade to Unlock Auto-Pilot">🔒</span>
-          <span id="scramCooldownText" style="display: none; color: #ff2e4c; font-size: 9px; font-weight: bold; margin-left: 8px; font-family: monospace;">⏳ 30:00</span>
+    <!-- Automation Modes Card -->
+    <div class="card-section">
+      <div class="section-title"><i class="fas fa-robot"></i> 运行模式</div>
+      <div class="mode-switch-group">
+        <div class="mode-option" data-mode="hunter" id="modeHunterBtn">
+          <i class="fas fa-search"></i> AUTO-HUNTER<br><span style="font-size: 8px;">(SCROLL BOT)</span>
         </div>
-        <label class="switch">
-          <input type="checkbox" id="autoPilotSwitch">
-          <span class="slider"></span>
+        <div class="mode-option" data-mode="pilot" id="modePilotBtn">
+          <i class="fas fa-plane"></i> AUTO-PILOT <span id="autoPilotLock" style="color: #ef4444; font-size: 10px; display: none;">🔒</span><br><span style="font-size: 8px;">(SEMI-AUTO)</span>
+        </div>
+      </div>
+      
+      <!-- Cooldown timer & emergency stop inside the mode card -->
+      <div class="flex-between" style="margin-top: 8px;">
+        <span class="label-icon"><i class="fas fa-volume-mute"></i> MUTE SOUND ALERT</span>
+        <label class="checkbox-switch">
+          <input type="checkbox" id="muteSoundSwitch">
+          <span class="checkbox-slider"></span>
+        </label>
+      </div>
+
+      <!-- Emergency SCRAM action -->
+      <div style="margin-top: 10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span id="scramCooldownText" style="display: none; color: #ef4444; font-size: 10px; font-weight: bold; font-family: monospace; animation: pulse 1.5s infinite;"><i class="fas fa-hourglass-half"></i> ⏳ 30:00</span>
+        </div>
+        <button id="scramBtn" style="display: none; width: 100%; border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.05); color: #ef4444; font-family: 'Inter', sans-serif; font-weight: bold; font-size: 11px; padding: 8px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; margin-top: 6px;">🛑 EMERGENCY SCRAM (STOP)</button>
+      </div>
+    </div>
+
+    <!-- Parameters Configuration Card -->
+    <div class="card-section">
+      <div class="section-title"><i class="fas fa-sliders-h"></i> 过滤与限制</div>
+      
+      <div class="setting-row">
+        <span class="label-icon"><i class="fas fa-chart-line"></i> AUTO-FILL SCORE THRESHOLD</span>
+        <span class="slider-value" id="thresholdVal">85</span>
+      </div>
+      <input type="range" id="autoPilotThreshold" min="70" max="95" value="85" step="1">
+
+      <div id="lowThresholdWarning" style="display: none; background: #FFFBEB; border: 1px solid #FDE68A; padding: 8px; border-radius: 8px; font-size: 10px; color: #B45309; line-height: 1.4; margin-top: 8px;">
+        ⚠️ <b>低阈值警告:</b> 评分设置低于 80 会触发更多自动化操作，这会显著增加被平台检测封号的风险。
+      </div>
+
+      <div class="setting-row" style="margin-top: 14px;">
+        <span class="label-icon"><i class="fas fa-paper-plane"></i> MAX DRAFTS / DAY</span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button id="decDrafts" class="btn-outline" style="padding: 2px 8px; font-size: 12px; font-weight: bold;">-</button>
+          <span id="draftsCount" style="font-weight: 700; font-size: 12px; min-width: 20px; text-align: center;">15</span>
+          <button id="incDrafts" class="btn-outline" style="padding: 2px 8px; font-size: 12px; font-weight: bold;">+</button>
+        </div>
+      </div>
+      <div class="draft-progress">
+        <div class="progress-fill" id="draftProgressFill"></div>
+      </div>
+      <div class="flex-between" style="margin-top: 6px; font-size: 10px; color: #64748B;">
+        <span><i class="far fa-clock"></i> Used today: <span id="usedDraftsSpan">0</span>/<span id="maxDraftsSpan">15</span></span>
+        <span><i class="fas fa-sync-alt"></i> Resets daily</span>
+      </div>
+    </div>
+
+    <!-- Credentials and Keys Management -->
+    <div class="card-section">
+      <div class="section-title"><i class="fas fa-key"></i> 授权与模型</div>
+      <div class="license-area">
+        <input type="password" class="license-input" placeholder="LICENSE KEY (DODO PAYMENTS)" id="licenseKey">
+        <button class="btn-primary" id="buyLicenseBtn" style="padding: 0 12px; font-size: 10px;">BUY</button>
+      </div>
+      <div class="license-area">
+        <input type="password" class="license-input" placeholder="DeepSeek / OpenAI API Key" id="apiKey">
+        <button class="btn-outline" id="testConnBtn" style="padding: 6px 12px;">TEST</button>
+      </div>
+      <div class="flex-between" style="font-size: 10px; color: #64748B;">
+        <span><i class="fas fa-shield-alt" style="color: #10B981;"></i> Secure local storage</span>
+      </div>
+    </div>
+
+    <!-- Targeting Niche & Products Proposition -->
+    <div class="card-section">
+      <div class="section-title"><i class="fas fa-bullhorn"></i> 客户画像与产品定位</div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div>
+          <span class="label-icon" style="margin-bottom: 6px;"><i class="fas fa-users"></i> TARGET NICHE & PAIN POINT</span>
+          <textarea rows="3" id="niche" placeholder="e.g. B2B SaaS founders struggling with customer churn, seeking growth tools..."></textarea>
+        </div>
+        <div>
+          <span class="label-icon" style="margin-bottom: 6px;"><i class="fas fa-gem"></i> YOUR VALUE PROPOSITION</span>
+          <textarea rows="3" id="valueProp" placeholder="e.g. LeadSniper: A browser-native B2B intent tracking tool that captures leads and generates auto-replies..."></textarea>
+        </div>
+        <div>
+          <span class="label-icon"><i class="fas fa-comment-dots"></i> AI REPLY STYLE</span>
+          <div class="tag-group" id="styleGroup">
+            <span class="style-tag active" data-style="Geek">💻 Geek</span>
+            <span class="style-tag" data-style="Warm">🤝 Warm</span>
+            <span class="style-tag" data-style="Executive">👔 Executive</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cloud Synchronization Webhook -->
+    <div class="card-section">
+      <div class="section-title"><i class="fas fa-cloud-upload-alt"></i> 云端 CRM 同步</div>
+      <div class="license-area" style="margin-bottom: 8px;">
+        <input type="text" class="license-input" placeholder="Webhook URL (Notion/Make/Zapier)" id="webhookUrl">
+        <label style="display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 11px; color: #475569; font-weight: 600;">
+          <input type="checkbox" id="autoSyncWebhook" checked> Auto
         </label>
       </div>
       
-      <!-- Auto-Pilot Threshold Slider -->
-      <div id="thresholdContainer" style="display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--border); padding-top: 6px; margin-top: 2px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <label style="color: var(--text-dim); font-size: 9px; font-weight: bold; letter-spacing: 0.5px;">🎯 AUTO-FILL SCORE THRESHOLD: <span id="thresholdVal" style="color: var(--neon-green)">85</span></label>
+      <div class="safety-note">
+        <i class="fas fa-shield-alt"></i> <strong>人机协同安全提醒:</strong><br>
+        本插件采用人机协同工作机制。AI 生成的回复会自动输入或复制，但<b>绝不自动发送</b>，必须由您手动确认点击发送，从而规避平台的封号算法。
+      </div>
+    </div>
+
+    <!-- Collapsible Advanced Configurations -->
+    <details style="margin-bottom: 12px; background: #F9FCFE; border-radius: 12px; padding: 6px 10px; border: 1px solid #EDF2F7;">
+      <summary style="font-weight: 700; font-size: 11px; cursor: pointer; color: #2C3E66; list-style: none; display: flex; align-items: center; gap: 4px;">
+        <i class="fas fa-cog"></i> ADVANCED CONFIGURATIONS <i class="fas fa-chevron-down" style="font-size: 8px; margin-left: auto;"></i>
+      </summary>
+      <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+        <div>
+          <label class="label-icon" style="margin-bottom: 3px;">BASE URL (ENDPOINT)</label>
+          <input type="text" class="license-input" id="apiEndpoint" placeholder="https://api.deepseek.com/chat/completions">
         </div>
-        <input type="range" id="autoPilotThreshold" min="70" max="95" value="85" style="padding: 2px 0; background: transparent; accent-color: var(--neon-green); cursor: pointer; border: none;">
-      </div>
-
-      <!-- Auto-Pilot Daily Limit Slider -->
-      <div id="dailyLimitContainer" style="display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--border); padding-top: 6px; margin-top: 2px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <label style="color: var(--text-dim); font-size: 9px; font-weight: bold; letter-spacing: 0.5px;">⏰ MAX DRAFTS / DAY: <span id="dailyLimitVal" style="color: var(--neon-green)">15</span></label>
+        <div>
+          <label class="label-icon" style="margin-bottom: 3px;">MODEL</label>
+          <input type="text" class="license-input" id="apiModel" placeholder="deepseek-chat">
         </div>
-        <input type="range" id="autoPilotDailyLimit" min="5" max="50" value="15" style="padding: 2px 0; background: transparent; accent-color: var(--neon-green); cursor: pointer; border: none;">
-      </div>
-
-      <!-- Low Threshold Warning Alert Box -->
-      <div id="lowThresholdWarning" style="display: none; background: rgba(255, 152, 0, 0.05); border: 1px solid rgba(255, 152, 0, 0.3); padding: 6px 10px; border-radius: 4px; font-size: 9px; color: #ffb74d; line-height: 1.4; margin-top: 2px;">
-        ⚠️ <b>低阈值风险警告:</b> 评分阈值低于 80 会导致匹配过多帖子，大幅增加账号被平台限制或封禁的风险。建议保持在 80 以上。
-      </div>
-
-      <!-- Emergency SCRAM Button -->
-      <button id="scramBtn" style="display: none; width: 100%; border: 1px solid var(--accent); background: rgba(255,46,76,0.15); color: var(--accent); font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 10px; padding: 6px; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">🛑 EMERGENCY SCRAM (STOP)</button>
-    </div>
-
-    <div class="field-group">
-      <div class="field-header">
-        <label>LICENSE KEY (DODO PAYMENTS)</label>
-        <a href="https://checkout.dodopayments.com/buy/pdt_0NgNoZpvOKdipx3cyM5dX?quantity=1" target="_blank" style="color: var(--neon-green); font-size: 9px; text-decoration: none; font-weight: bold; letter-spacing: 0.5px;">🛒 BUY LICENSE</a>
-      </div>
-      <input type="password" id="licenseKey" placeholder="e.g. XXXX-XXXX-XXXX-XXXX" style="border-color: var(--neon-cyan);">
-    </div>
-
-    <div class="field-group">
-      <div class="field-header">
-        <label>DEEPSEEK/OPENAI API KEY</label>
-        <span class="secure-badge">🔒 Local Secure Storage</span>
-      </div>
-      <div class="input-with-btn">
-        <input type="password" id="apiKey" placeholder="e.g. sk-xxxxxxxxxxxxxxxxxxxxxxxx">
-        <button id="testConnBtn" class="btn-test" title="Verify connection to LLM provider">TEST</button>
-      </div>
-    </div>
-
-    <div class="field-group">
-      <label>TARGET NICHE & PAIN POINT (PROMPT)</label>
-      <textarea id="niche" placeholder="e.g. B2B SaaS founders struggling with customer churn, seeking automation or growth tools..."></textarea>
-    </div>
-
-    <div class="field-group">
-      <label>AI Reply Style (回复风格)</label>
-      <select id="apiReplyStyle" style="width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 8px 10px; outline: none; transition: border-color 0.3s;">
-        <option value="Geek">💻 Geek (极客技术流)</option>
-        <option value="Warm">🤝 Warm (温暖共情流)</option>
-        <option value="Executive">👔 Executive (高管专业流)</option>
-      </select>
-    </div>
-
-    <div class="field-group">
-      <label style="color: var(--neon-cyan);">YOUR PRODUCT/SERVICE VALUE PROPOSITION</label>
-      <textarea id="valueProp" placeholder="e.g. LeadSniper: A browser-native B2B intent tracking tool that captures leads and generates auto-replies on X, LinkedIn, and Reddit..."></textarea>
-    </div>
-
-    <!-- Elevated Webhook Configuration as a Core Independent Module -->
-    <div class="field-group">
-      <div class="field-header">
-        <label style="color: #00ff9d;">CLOUD SYNC WEBHOOK URL (NOTION/CRM)</label>
-        <label class="auto-sync-checkbox"><input type="checkbox" id="autoSyncWebhook" checked> Auto-Push</label>
-      </div>
-      <input type="text" id="webhookUrl" placeholder="https://hook.us1.make.com/xxxxxxxxxxxx" style="border-color: rgba(0, 255, 157, 0.4);">
-    </div>
-
-    <!-- Human Co-pilot Disclaimer -->
-    <div style="background: rgba(255, 235, 59, 0.03); border: 1px solid rgba(255, 235, 59, 0.2); padding: 8px 12px; border-radius: 4px; font-size: 10px; color: #ffe57f; line-height: 1.4; margin-top: 2px;">
-      ⚠️ <b>HUMAN CO-PILOT SAFETY PROTOCOL:</b> Automatic replies are injected with organic human-like delays (500ms - 1500ms) and require manual user confirmation before posting. This is to ensure compliance with platform anti-bot heuristics.
-    </div>
-
-    <!-- Advanced Settings Folded -->
-    <details class="advanced-settings">
-      <summary>⚙️ ADVANCED SETTINGS (CUSTOM ENDPOINT & MODEL & BLACKLIST)</summary>
-      <div class="row" style="margin-top: 4px;">
-        <div class="field-group" style="flex:2">
-          <label>BASE URL (ENDPOINT)</label>
-          <input type="text" id="apiEndpoint" placeholder="https://api.deepseek.com/chat/completions">
+        <div>
+          <label class="label-icon" style="margin-bottom: 3px; color: #EF4444;">LOCAL KEYWORD BLACKLIST</label>
+          <input type="text" class="license-input" id="blacklistKeywords" placeholder="crypto, airdrop, giveaway">
         </div>
-        <div class="field-group" style="flex:1">
-          <label>MODEL</label>
-          <input type="text" id="apiModel" placeholder="deepseek-chat">
+        <div style="border-top: 1px solid #E2E8F0; padding-top: 8px; font-size: 9px; color: #64748B; line-height: 1.4;">
+          🛡️ <b>Advanced Safety Tips:</b><br>
+          • 建议定期用无痕浏览器窗口检测社交账号的回复是否对游客正常可见（防止影子封禁 Shadow Ban）。<br>
+          • 生产环境建议搭配 AdsPower、Multilogin 等防关联浏览器运行，或屏蔽 WebGL 指纹防止浏览器被识别。
         </div>
-      </div>
-      <div class="field-group" style="margin-top: 8px;">
-        <label style="color: var(--accent);">LOCAL KEYWORD BLACKLIST (COMMA SEPARATED)</label>
-        <input type="text" id="blacklistKeywords" placeholder="e.g. crypto, airdrop, giveaway, freebie">
-      </div>
-      <div style="margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; font-size: 9px; color: var(--text-dim); line-height: 1.4;">
-        🛡️ <b>Advanced Safety Tips:</b><br>
-        • 定期在浏览器隐私窗口 (Incognito) 下检查个人社交主页，确认评论是否对未登录用户正常可见（影子封禁检测）。<br>
-        • 建议搭配 AdsPower / Multilogin 等反指纹浏览器运行本插件，或者关闭 WebGL 暴露，以防平台追踪设备指纹识别为非正常用户。
       </div>
     </details>
 
-    <button class="btn-save" id="saveBtn">⚡ INITIALIZE SYSTEM</button>
-    <button class="btn-save" id="intentSearchBtn" style="margin-top: 1px; border-color: var(--neon-green); color: var(--neon-green);">🎯 LAUNCH INTENT SEARCH</button>
-    <button class="btn-save" id="openSidepanelBtn" style="margin-top: 1px; border-color: var(--neon-cyan); color: var(--neon-cyan);">🖥️ OPEN 3D RADAR</button>
-    
-    <!-- Elite Digital Identity Endorsement -->
-    <div class="footer-signature">
-      <span>POWERED BY <b>HY DIGITAL STUDIO</b></span>
+    <!-- Main System Actions -->
+    <div class="action-buttons">
+      <button class="btn-secondary" id="saveBtn"><i class="fas fa-save"></i> INITIALIZE SYSTEM</button>
+      <button class="btn-secondary" id="intentSearchBtn"><i class="fas fa-search"></i> LAUNCH INTENT SEARCH</button>
+      <button class="btn-launch" id="openSidepanelBtn"><i class="fas fa-globe"></i> OPEN 3D RADAR</button>
     </div>
-  </div>
-  <div class="toast" id="toast">✅ SYSTEM SYNCED</div>
 
-  <!-- Disclaimer Modal -->
-  <div id="disclaimerModal" style="display: none; position: fixed; inset: 0; background: rgba(5,5,10,0.96); z-index: 100000; align-items: center; justify-content: center; padding: 20px;">
-    <div style="background: var(--surface); border: 2px solid var(--accent); border-radius: 8px; padding: 25px; max-width: 340px; box-shadow: var(--glow); text-align: center; position: relative;">
-      <div style="position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 46, 76, 0.01) 2px, rgba(255, 46, 76, 0.01) 4px); pointer-events: none; border-radius: 8px;"></div>
-      <div style="color: var(--accent); font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; margin-bottom: 15px; letter-spacing: 1px;">⚠️ LEGAL LIABILITY PROTOCOL</div>
-      <p style="font-size: 11px; color: #fff; line-height: 1.6; text-align: left; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace;">
-        Auto-Pilot generated responses are drafted entirely by AI based on social post contexts.
-        <br><br>
-        By enabling Auto-Pilot, you agree that <b>you will manually review all drafts</b> before sending. You bear full legal and ethical responsibility for any content sent from your accounts.
-      </p>
-      <button id="acceptDisclaimerBtn" class="btn-save" style="border-color: var(--neon-green); color: var(--neon-green); font-size: 11px; padding: 8px 16px; letter-spacing: 1px; width: auto; display: inline-block; margin: 0 auto;">I ACCEPT & UNDERSTAND</button>
-    </div>
+    <footer>
+      🤖 Digital Employee Interface · Native B2B intent radar · Powered by HY Digital Studio
+    </footer>
   </div>
+</div>
 
-  <script src="popup.js"></script>
+<div class="toast" id="toast">✅ SYSTEM SYNCED</div>
+
+<!-- Disclaimer Modal -->
+<div id="disclaimerModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 100000; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #ffffff; border-radius: 24px; padding: 28px; max-width: 340px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); text-align: center;">
+    <div style="color: #ef4444; font-size: 24px; margin-bottom: 12px;"><i class="fas fa-gavel"></i></div>
+    <h3 style="color: #1e293b; font-size: 15px; font-weight: 700; margin-bottom: 12px; font-family: 'Inter', sans-serif;">LEGAL LIABILITY AGREEMENT</h3>
+    <p style="font-size: 12px; color: #64748b; line-height: 1.6; text-align: left; margin-bottom: 20px; font-family: 'Inter', sans-serif;">
+      Auto-Pilot generated responses are drafted entirely by AI based on social post contexts.
+      <br><br>
+      By enabling Auto-Pilot, you agree that <b>you will manually review all drafts</b> before sending. You bear full legal and ethical responsibility for any content sent from your accounts.
+    </p>
+    <button id="acceptDisclaimerBtn" class="btn-primary" style="padding: 10px 24px; border-radius: 40px; font-size: 12px; justify-content: center; width: 100%;">I ACCEPT & UNDERSTAND</button>
+  </div>
+</div>
+
+<script src="popup.js"></script>
 </body>
 </html>
