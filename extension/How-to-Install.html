@@ -89,28 +89,6 @@
       letter-spacing: 2px;
     }
 
-    /* Language Switcher Button */
-    .lang-btn {
-      background: rgba(0, 229, 255, 0.05);
-      border: 1px solid rgba(0, 229, 255, 0.2);
-      color: var(--neon-cyan);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 6px 14px;
-      border-radius: 4px;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      transition: all 0.3s ease;
-    }
-
-    .lang-btn:hover {
-      border-color: var(--neon-cyan);
-      box-shadow: var(--glow);
-      background: rgba(0, 229, 255, 0.1);
-    }
-
     /* Step Section */
     .step-list {
       display: flex;
@@ -242,13 +220,6 @@
       color: var(--neon-cyan);
       text-decoration: none;
     }
-
-    /* Toggle visibility states */
-    .lang-zh { display: none; }
-    .lang-en { display: block; }
-
-    body.zh-mode .lang-zh { display: block; }
-    body.zh-mode .lang-en { display: none; }
   </style>
 </head>
 <body>
@@ -256,7 +227,6 @@
   <div class="wrapper">
     <header>
       <div class="logo">LEADSNIPER 3.0</div>
-      <button class="lang-btn" id="langToggle">中文版</button>
     </header>
 
     <div class="step-list">
@@ -265,18 +235,9 @@
       <div class="step-card">
         <span class="step-num">STEP 01</span>
         
-        <div class="lang-en">
-          <div class="step-title">Unzip the Package</div>
-          <div class="step-content">
-            Extract the downloaded zip archive (<b>LeadSniper_Secure.zip</b>). You will see a folder named <b>LeadSniper</b> and this instruction guide. Keep the <b>LeadSniper</b> folder in a safe directory where you won't accidentally delete or move it.
-          </div>
-        </div>
-
-        <div class="lang-zh">
-          <div class="step-title">解压安装包</div>
-          <div class="step-content">
-            将下载的 <b>LeadSniper_Secure.zip</b> 压缩包解压。解压后会获得一个名为 <b>LeadSniper</b> 的文件夹（包含插件的核心代码）和此指南文件。请将该文件夹移动到一个不易被误删的本地目录。
-          </div>
+        <div class="step-title">Unzip the Package</div>
+        <div class="step-content">
+          Extract the downloaded zip archive (<b>LeadSniper_Secure.zip</b>). You will see a folder named <b>LeadSniper</b> and this instruction guide. Keep the <b>LeadSniper</b> folder in a safe directory where you won't accidentally delete or move it.
         </div>
       </div>
 
@@ -284,33 +245,16 @@
       <div class="step-card">
         <span class="step-num">STEP 02</span>
 
-        <div class="lang-en">
-          <div class="step-title">Open Extension Manager</div>
-          <div class="step-content">
-            Open Chrome or Edge browser, and enter the following path in the URL address bar to open the Extensions page:
-            <div class="copy-box">
-              <input type="text" readonly class="copy-input" value="chrome://extensions" id="urlChrome">
-              <button class="copy-btn" onclick="copyText('urlChrome')">COPY</button>
-            </div>
-            <div class="copy-box" style="margin-top: 8px;">
-              <input type="text" readonly class="copy-input" value="edge://extensions" id="urlEdge">
-              <button class="copy-btn" onclick="copyText('urlEdge')">COPY</button>
-            </div>
+        <div class="step-title">Open Extension Manager</div>
+        <div class="step-content">
+          Open Chrome or Edge browser, and enter the following path in the URL address bar to open the Extensions page:
+          <div class="copy-box">
+            <input type="text" readonly class="copy-input" value="chrome://extensions" id="urlChrome">
+            <button class="copy-btn" onclick="copyText('urlChrome')">COPY</button>
           </div>
-        </div>
-
-        <div class="lang-zh">
-          <div class="step-title">打开扩展程序管理页面</div>
-          <div class="step-content">
-            打开 Chrome 或 Edge 浏览器，在地址栏中输入并进入以下路径，开启扩展程序管理页面：
-            <div class="copy-box">
-              <input type="text" readonly class="copy-input" value="chrome://extensions" id="urlChromeZh">
-              <button class="copy-btn" onclick="copyText('urlChromeZh')">复制</button>
-            </div>
-            <div class="copy-box" style="margin-top: 8px;">
-              <input type="text" readonly class="copy-input" value="edge://extensions" id="urlEdgeZh">
-              <button class="copy-btn" onclick="copyText('urlEdgeZh')">复制</button>
-            </div>
+          <div class="copy-box" style="margin-top: 8px;">
+            <input type="text" readonly class="copy-input" value="edge://extensions" id="urlEdge">
+            <button class="copy-btn" onclick="copyText('urlEdge')">COPY</button>
           </div>
         </div>
       </div>
@@ -319,23 +263,11 @@
       <div class="step-card">
         <span class="step-num">STEP 03</span>
 
-        <div class="lang-en">
-          <div class="step-title">Enable Developer Mode</div>
-          <div class="step-content">
-            Locate the <b>Developer Mode</b> switch in the top-right corner of the extensions page and turn it <b>ON</b>.
-            <div class="alert-card">
-              🛡️ <b>Security Verification:</b> LeadSniper is loaded directly via the browser's developer tools. All your API keys and webhook settings are stored 100% locally on your machine. No scripts run externally.
-            </div>
-          </div>
-        </div>
-
-        <div class="lang-zh">
-          <div class="step-title">开启开发者模式</div>
-          <div class="step-content">
-            在扩展程序管理页面的右上角，找到<b>【开发者模式】</b>的开关并将其<b>开启</b>。
-            <div class="alert-card">
-              🛡️ <b>安全验证：</b> LeadSniper 是通过官方开发者模式本地加载运行的。您所有的 API Key 和 Webhook 数据都 100% 保存在本地，没有任何外部收集脚本，确保数据隐私绝对安全。
-            </div>
+        <div class="step-title">Enable Developer Mode</div>
+        <div class="step-content">
+          Locate the <b>Developer Mode</b> switch in the top-right corner of the extensions page and turn it <b>ON</b>.
+          <div class="alert-card">
+            🛡️ <b>Security Verification:</b> LeadSniper is loaded directly via the browser's developer tools. All your API keys and webhook settings are stored 100% locally on your machine. No scripts run externally.
           </div>
         </div>
       </div>
@@ -344,52 +276,24 @@
       <div class="step-card">
         <span class="step-num">STEP 04</span>
 
-        <div class="lang-en">
-          <div class="step-title">Load Unpacked Extension</div>
-          <div class="step-content">
-            1. Click the <b>Load unpacked</b> button in the top-left corner.<br>
-            2. Choose and select the <b>LeadSniper</b> folder that you extracted in Step 1.<br>
-            3. Once loaded, click the <b>Puzzle icon</b> in the browser toolbar, find LeadSniper, and click the <b>Pin icon</b> to pin it for easy access.
-            <br>
-            <span class="success-badge">✅ SYSTEM SECURED & ACTIVE</span>
-          </div>
-        </div>
-
-        <div class="lang-zh">
-          <div class="step-title">加载已解压的扩展程序</div>
-          <div class="step-content">
-            1. 点击管理页面左上角的<b>【加载已解压的扩展程序】</b>（或 Load unpacked）按钮。<br>
-            2. 在弹出的文件夹选择框中，选择在步骤 1 解压出来的 <b>LeadSniper</b> 文件夹。<br>
-            3. 加载完成后，点击浏览器右上角的<b>【拼图】</b>图标，找到 LeadSniper，点击<b>【固定】</b>(Pin) 图标将其锁定到工具栏。
-            <br>
-            <span class="success-badge">✅ 系统加载就绪，雷达已启动</span>
-          </div>
+        <div class="step-title">Load Unpacked Extension</div>
+        <div class="step-content">
+          1. Click the <b>Load unpacked</b> button in the top-left corner.<br>
+          2. Choose and select the <b>LeadSniper</b> folder that you extracted in Step 1.<br>
+          3. Once loaded, click the <b>Puzzle icon</b> in the browser toolbar, find LeadSniper, and click the <b>Pin icon</b> to pin it for easy access.
+          <br>
+          <span class="success-badge">✅ SYSTEM SECURED & ACTIVE</span>
         </div>
       </div>
 
     </div>
 
     <footer>
-      <div class="lang-en">
-        Need help? Contact our tech support at <a href="mailto:hy@hydigital.studio">hy@hydigital.studio</a>
-      </div>
-      <div class="lang-zh">
-        遇到安装困难？请联系技术支持邮箱：<a href="mailto:hy@hydigital.studio">hy@hydigital.studio</a>
-      </div>
+      Need help? Contact our tech support at <a href="mailto:hy@hydigital.studio">hy@hydigital.studio</a>
     </footer>
   </div>
 
   <script>
-    const langToggle = document.getElementById('langToggle');
-    langToggle.addEventListener('click', () => {
-      document.body.classList.toggle('zh-mode');
-      if (document.body.classList.contains('zh-mode')) {
-        langToggle.textContent = 'ENGLISH';
-      } else {
-        langToggle.textContent = '中文版';
-      }
-    });
-
     function copyText(id) {
       const copyText = document.getElementById(id);
       copyText.select();
