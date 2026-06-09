@@ -1,0 +1,168 @@
+/* ═══════════════════════════════════════════
+   LeadSniper — Content Script Injected Styles
+   ═══════════════════════════════════════════ */
+
+/* ── Pending: Orange scanning border ── */
+[data-leadsniper-status="pending"] {
+  border-left: 2px solid #ff980088 !important;
+  transition: border-color 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* ── Scanning animation ── */
+[data-leadsniper-status="scanning"] {
+  border-left: 2px solid #ff9800 !important;
+  animation: leadsniper-scan-pulse 1.2s ease infinite;
+}
+@keyframes leadsniper-scan-pulse {
+  0%, 100% { border-left-color: #ff9800; }
+  50% { border-left-color: #ff980033; }
+}
+
+/* ── HOT Lead: Glowing red ── */
+[data-leadsniper-status="analyzed_hot"] {
+  border-left: 3px solid #ff2e4c !important;
+  box-shadow: inset 4px 0 12px -4px rgba(255, 46, 76, 0.25) !important;
+  opacity: 1 !important;
+  position: relative;
+}
+
+/* ── COLD: Dimmed out ── */
+[data-leadsniper-status="analyzed_cold"] {
+  border-left: 2px solid transparent !important;
+  opacity: 0.45 !important;
+}
+
+/* ── WARM: Moderate interest ── */
+[data-leadsniper-status="analyzed_warm"] {
+  border-left: 2px solid #ff9800 !important;
+  opacity: 0.85 !important;
+}
+
+/* ── Error state ── */
+[data-leadsniper-status="error"] {
+  border-left: 2px solid #666 !important;
+  opacity: 0.7 !important;
+}
+
+/* ═══════════════════════════════════════════
+   LeadSniper Badge (injected insight bubble)
+   ═══════════════════════════════════════════ */
+.leadsniper-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 0 4px 0;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #1a0a10, #1e0a14);
+  border: 1px solid #ff2e4c55;
+  border-left: 3px solid #ff2e4c;
+  border-radius: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #e0e0e0;
+  box-shadow: 0 2px 12px rgba(255, 46, 76, 0.15), 0 0 20px rgba(255, 46, 76, 0.05);
+  animation: leadsniper-badge-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 1000;
+}
+
+@keyframes leadsniper-badge-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.leadsniper-badge-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.leadsniper-badge-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.leadsniper-badge-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.leadsniper-badge-title {
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #ff2e4c;
+}
+
+.leadsniper-badge-score {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.leadsniper-badge-score.high {
+  background: #ff2e4c22;
+  color: #ff6b81;
+  border: 1px solid #ff2e4c44;
+}
+
+.leadsniper-badge-score.medium {
+  background: #ff980022;
+  color: #ffb74d;
+  border: 1px solid #ff980044;
+}
+
+.leadsniper-badge-analysis {
+  font-size: 12px;
+  color: #ccc;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* ── Warm badge variant ── */
+.leadsniper-badge.warm {
+  border-left-color: #ff9800;
+  background: linear-gradient(135deg, #1a1208, #1e1408);
+  border-color: #ff980055;
+  box-shadow: 0 2px 12px rgba(255, 152, 0, 0.1);
+}
+.leadsniper-badge.warm .leadsniper-badge-title {
+  color: #ff9800;
+}
+
+/* ── Interactive Scanned Posts ── */
+[data-ls="hot"], [data-ls="news"], [data-ls="cold"], [data-ls="locked"] {
+  cursor: pointer !important;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease !important;
+}
+
+[data-ls="hot"]:hover {
+  box-shadow: 0 0 15px rgba(255, 46, 76, 0.25) !important;
+}
+
+[data-ls="news"]:hover {
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.25) !important;
+}
+
+[data-ls="cold"]:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 157, 0.15) !important;
+}
+
+[data-ls="locked"]:hover {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15) !important;
+}

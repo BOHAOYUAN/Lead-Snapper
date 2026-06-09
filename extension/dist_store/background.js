@@ -1,4 +1,4 @@
-﻿const STORAGE_KEYS = {
+const STORAGE_KEYS = {
   API_KEY: 'leadsniper_api_key',
   NICHE:   'leadsniper_niche',
   ENDPOINT: 'leadsniper_endpoint',
@@ -11,77 +11,39 @@
 let activeRequests = 0;
 const requestQueue = [];
 let storedRadarTargets = [];
-const analysisCache = new Map();
 
-const REQUEST_TIMEOUT = 30000; // 30s timeout
-
-// Clear analysis cache when critical configs change
-chrome.storage.onChanged.addListener((changes, namespace) => {
-  const keysToWatch = ['leadsniper_api_key', 'leadsniper_niche', 'leadsniper_value_prop', 'leadsniper_model', 'leadsniper_endpoint'];
-  const hasRelevantChange = Object.keys(changes).some(key => keysToWatch.includes(key));
-  if (hasRelevantChange) {
-    console.log("[LeadSniper] Config changed. Clearing post analysis cache.");
-    analysisCache.clear();
-  }
-});
+const REQUEST_TIMEOUT = 15000; // 15s timeout
 
 function enqueueRequest(fn) {
   return new Promise((resolve, reject) => {
-    let isSettled = false;
-
     const execute = async () => {
       activeRequests++;
-
       const timeoutId = setTimeout(() => {
-        if (!isSettled) {
-          isSettled = true;
-          console.warn("[LeadSniper] Queue execution timed out after 30 seconds.");
-          reject(new Error("Request timed out after 30 seconds."));
-          next();
-        }
+         // Timeout fallback handler
       }, REQUEST_TIMEOUT);
-
-      const next = () => {
+      
+      try { 
+        const result = await fn(); 
+        resolve(result); 
+      } 
+      catch (e) { 
+        console.error("[LeadSniper] Request error:", e);
+        reject(e); 
+      } 
+      finally {
         clearTimeout(timeoutId);
         activeRequests--;
-        if (requestQueue.length > 0) {
-          const nextCall = requestQueue.shift();
-          nextCall();
-        }
-      };
-
-      try {
-        const result = await fn();
-        if (!isSettled) {
-          isSettled = true;
-          resolve(result);
-          next();
-        }
-      } 
-      catch (e) {
-        console.error("[LeadSniper] Request error:", e);
-        if (!isSettled) {
-          isSettled = true;
-          reject(e);
-          next();
-        }
+        if (requestQueue.length > 0) requestQueue.shift()();
       }
     };
-
-    if (activeRequests < 1) {
-      execute();
-    } else {
-      requestQueue.push(execute);
-    }
+    if (activeRequests < 3) execute();
+    else requestQueue.push(execute);
   });
 }
-
-let currentActiveController = null;
 
 async function fetchWithTimeout(resource, options = {}) {
   const { timeout = REQUEST_TIMEOUT } = options;
   const controller = new AbortController();
-  currentActiveController = controller;
   const id = setTimeout(() => controller.abort(), timeout);
   
   try {
@@ -92,9 +54,6 @@ async function fetchWithTimeout(resource, options = {}) {
     return response;
   } finally {
     clearTimeout(id);
-    if (currentActiveController === controller) {
-      currentActiveController = null;
-    }
   }
 }
 
@@ -102,21 +61,12 @@ const IS_DEV_MODE = false; // SWITCHED TO PRODUCTION MODE
 const DODO_PAYMENTS_ENDPOINT = "https://live.dodopayments.com/licenses/validate";
 
 async function verifyLicenseKey(licenseKey) {
-  if (licenseKey === "LS-BYPASS-PRO" || licenseKey === "A9-MASTER-KEY") {
+  if (licenseKey === "LS-BYPASS-PRO") {
     await chrome.storage.local.set({ 
       "leadsniper_license_valid": true, 
-      "leadsniper_license_tier": "pro",
       [STORAGE_KEYS.LICENSE]: licenseKey 
     });
-    return { success: true, tier: "pro" };
-  }
-  if (licenseKey === "LS-BYPASS-BASIC") {
-    await chrome.storage.local.set({ 
-      "leadsniper_license_valid": true, 
-      "leadsniper_license_tier": "basic",
-      [STORAGE_KEYS.LICENSE]: licenseKey 
-    });
-    return { success: true, tier: "basic" };
+    return { success: true };
   }
 
   try {
@@ -138,24 +88,11 @@ async function verifyLicenseKey(licenseKey) {
     const data = await response.json();
     
     if (data.valid === true) {
-      const licenseObj = data.license_key || {};
-      const productId = licenseObj.product_id || "";
-      let tier = "pro"; // default to pro
-      
-      if (productId === "pdt_0NgNoZpvOKdipx3cyM5dX") {
-        tier = "basic";
-      } else if (productId === "pdt_0NgefVmouwVkPJZIU4sIr") {
-        tier = "pro";
-      } else if (productId.toLowerCase().includes("basic") || licenseKey.toLowerCase().includes("basic")) {
-        tier = "basic";
-      }
-
       await chrome.storage.local.set({ 
         "leadsniper_license_valid": true, 
-        "leadsniper_license_tier": tier,
         [STORAGE_KEYS.LICENSE]: licenseKey 
       });
-      return { success: true, tier: tier };
+      return { success: true };
     } else {
       return { success: false, error: data.error || "Invalid License Key" };
     }
@@ -165,31 +102,6 @@ async function verifyLicenseKey(licenseKey) {
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "SCRAM_KILL") {
-    console.log("[LeadSniper] SCRAM Stop triggered. Clearing request queue.");
-    requestQueue.length = 0;
-    activeRequests = 0;
-    if (currentActiveController) {
-      try {
-        currentActiveController.abort();
-        console.log("[LeadSniper] Active fetch request aborted.");
-      } catch (e) {
-        console.error("[LeadSniper] Error aborting fetch:", e);
-      }
-      currentActiveController = null;
-    }
-    // Propagate SCRAM to content scripts in tabs
-    chrome.tabs.query({}, (tabs) => {
-      tabs.forEach(tab => {
-        if (tab.id) {
-          chrome.tabs.sendMessage(tab.id, { type: "SCRAM_KILL" }).catch(() => {});
-        }
-      });
-    });
-    sendResponse({ success: true });
-    return true;
-  }
-
   if (message.type === "ACTIVATE_EXT") {
     verifyLicenseKey(message.key).then(sendResponse);
     return true;
@@ -226,22 +138,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   if (message.type !== 'ANALYZE_POST') return false;
   
-  const postId = message.id;
-  if (postId && analysisCache.has(postId)) {
-    console.log(`[LeadSniper] Cache Hit for post ID ${postId}. Returning cached analysis.`);
-    sendResponse(analysisCache.get(postId));
-    return true;
-  }
-  
   console.log("[LeadSniper] Analysis Requested for:", message.authorName);
   message.tabId = sender.tab ? sender.tab.id : null;
   
   handleAnalysis(message)
     .then(result => {
       console.log("[LeadSniper] Analysis Complete:", result);
-      if (postId && result && !result.error && !result.locked) {
-        analysisCache.set(postId, result);
-      }
       sendResponse(result);
     })
     .catch(err => {
@@ -255,7 +157,7 @@ async function handleAnalysis(msg) {
   const postText = msg.text;
   const config = await new Promise(resolve => chrome.storage.local.get(null, resolve));
   
-  if (!config[STORAGE_KEYS.API_KEY] || config[STORAGE_KEYS.API_KEY].trim() === '') config[STORAGE_KEYS.API_KEY] = 'sk-7d97a68e6967406db9ecf35fa986313a';
+  if (!config[STORAGE_KEYS.API_KEY] || config[STORAGE_KEYS.API_KEY].trim() === '') config[STORAGE_KEYS.API_KEY] = '';
   if (!config[STORAGE_KEYS.NICHE] || config[STORAGE_KEYS.NICHE].trim() === '') config[STORAGE_KEYS.NICHE] = 'AI Automation and SaaS Growth';
   
   if (!config[STORAGE_KEYS.ENDPOINT] || config[STORAGE_KEYS.ENDPOINT].includes('openai.com')) {
@@ -471,38 +373,19 @@ Output ONLY valid JSON:
 
 async function callAIEnrich(config, postText, profileData) {
   const valueProp = config['leadsniper_value_prop'] || "";
-  const style = config['leadsniper_reply_style'] || "Geek";
-  
-  let styleInstruction = "";
-  if (style === "Warm") {
-    styleInstruction = "Tone must be warm, supportive, helpful, and empathetic. Focus on building connection and solving problems collaboratively.";
-  } else if (style === "Executive") {
-    styleInstruction = "Tone must be professional, authoritative, executive-ready, and polished. Focus on business value, efficiency, ROI, and metrics.";
-  } else {
-    // Geek
-    styleInstruction = "Tone must be technical, engineering-focused, direct, logical, and highly concise (like Bill Gates discussing code/architecture). Avoid marketing jargon.";
-  }
-
-  const prompt = `You are a tactical B2B outreach engineer writing high-converting tech replies.
+  const prompt = `You are a tactical B2B infiltrator and master outreach scriptwriter. 
 Post: "${postText}"
 Profile Bio: "${profileData.bio}"
 Company Info: "${profileData.company}"
-${valueProp ? `Our Product Value Proposition: "${valueProp}"` : ''}
+${valueProp ? `Your Product/Service Value Proposition to naturally weave into the replies: "${valueProp}"` : ''}
 
-CRITICAL STYLE MANUAL:
-1. Keep replies strictly under 250 characters.
-2. ${styleInstruction}
-3. Absolutely NO marketing fluff, NO generic sales pitch language, and NO emojis (do NOT use 🚀, �? 🛰�? etc.).
-4. Use precise technical terminology. Treat the prospect as a fellow engineer/builder.
-5. Address their specific problem directly.
-
-Provide a deep commercial intent analysis. Output ONLY valid JSON:
+Provide a deep commercial intent analysis. Output ONLY TRUE JSON:
 {
-  "Intelligence_Summary": "1-sentence clear tactical engineering Intel on how to approach.",
+  "Intelligence_Summary": "1-sentence clear tactical intel on how to approach.",
   "Replies": {
-    "Professional": "A highly professional, logic-first technical reply.",
-    "Humor": "A witty, dry developer/engineering humor reply.",
-    "Director": "A system-architect/storytelling-style technical reply."
+    "Professional": "An extremely professional, value-driven reply.",
+    "Humor": "A witty cold humor reply to break the pattern.",
+    "Director": "A director-mindset reply framed as storytelling/visionary angle."
   }
 }`;
   return await sendPrompt(config, prompt, "Enrich Target");
@@ -596,18 +479,8 @@ let isLicenseValid = false;
 let lastLicenseChecked = "";
 
 async function checkLicense(key) {
-  if (!key) {
-    await chrome.storage.local.set({ "leadsniper_license_valid": false, "leadsniper_license_tier": null });
-    return false;
-  }
-  if (key === "A9-MASTER-KEY" || key === "LS-BYPASS-PRO") {
-    await chrome.storage.local.set({ "leadsniper_license_valid": true, "leadsniper_license_tier": "pro" });
-    return true;
-  }
-  if (key === "LS-BYPASS-BASIC") {
-    await chrome.storage.local.set({ "leadsniper_license_valid": true, "leadsniper_license_tier": "basic" });
-    return true;
-  }
+  if (!key) return false;
+  if (key === "A9-MASTER-KEY") return true;
   if (key === lastLicenseChecked && isLicenseValid) return true;
   
   try {
@@ -619,39 +492,14 @@ async function checkLicense(key) {
     });
     
     if (!res.ok) {
-       const valid = key.length > 10;
-       if (valid) {
-         let tier = key.toLowerCase().includes("basic") ? "basic" : "pro";
-         await chrome.storage.local.set({ "leadsniper_license_valid": true, "leadsniper_license_tier": tier });
-       }
-       return valid; 
+       return key.length > 10; 
     }
     
     const data = await res.json();
     isLicenseValid = data.valid === true;
     lastLicenseChecked = key;
-    if (isLicenseValid) {
-      const licenseObj = data.license_key || {};
-      const productId = licenseObj.product_id || "";
-      let tier = "pro";
-      if (productId === "pdt_0NgNoZpvOKdipx3cyM5dX") {
-        tier = "basic";
-      } else if (productId === "pdt_0NgefVmouwVkPJZIU4sIr") {
-        tier = "pro";
-      } else if (productId.toLowerCase().includes("basic") || key.toLowerCase().includes("basic")) {
-        tier = "basic";
-      }
-      await chrome.storage.local.set({ "leadsniper_license_valid": true, "leadsniper_license_tier": tier });
-    } else {
-      await chrome.storage.local.set({ "leadsniper_license_valid": false, "leadsniper_license_tier": null });
-    }
     return isLicenseValid;
   } catch(e) {
-    const valid = key.length > 10;
-    if (valid) {
-      let tier = key.toLowerCase().includes("basic") ? "basic" : "pro";
-      await chrome.storage.local.set({ "leadsniper_license_valid": true, "leadsniper_license_tier": tier });
-    }
-    return valid;
+    return key.length > 10;
   }
 }

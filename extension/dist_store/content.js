@@ -72,19 +72,7 @@ function safeSendMessage(msg, callback) {
   }
 }
 
-let isScrammed = false;
-
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.type === 'SCRAM_KILL') {
-    console.warn('🛑 [LeadSniper] SCRAM emergency stop initiated.');
-    isScrammed = true;
-    document.querySelectorAll('.ls-autopilot-ready-badge').forEach(el => el.remove());
-    const toast = document.getElementById('ls-linkedin-autopilot-toast');
-    if (toast) toast.remove();
-    sendResponse({ success: true });
-    return true;
-  }
-
   if (msg.type === 'SCROLL_TO_POST' && msg.id) {
     const el = document.querySelector(`[data-ls-id="${msg.id}"]`);
     if (el) {
@@ -226,12 +214,12 @@ function extractAuthor(el) {
   let authorBio = "";
 
   if (PLATFORM === 'X') {
-    const nameEl = el.querySelector('[data-testid="User-Name"] span, a[href^="/"] span');
+    const nameEl = el.querySelector('[data-testid="User-Name"] span');
     if (nameEl) authorName = nameEl.textContent.trim();
-    const link = el.querySelector('a[role="link"][href^="/"], a[href^="/"]');
-    if (link) profileUrl = link.href.startsWith('http') ? link.href : 'https://x.com' + link.getAttribute('href');
+    const link = el.querySelector('a[role="link"][href^="/"]');
+    if (link) profileUrl = link.href;
 
-    const handleEl = el.querySelector('[data-testid="User-Name"] a[href^="/"] span:nth-child(2), span.css-901oao.css-16my406.r-poiln3.r-bcqeeo.r-qvutc0');
+    const handleEl = el.querySelector('[data-testid="User-Name"] a[href^="/"] span:nth-child(2)');
     if (handleEl) {
       authorBio = handleEl.textContent.trim(); // store handle in bio for context
     }
@@ -409,16 +397,11 @@ function getActiveEditor(postEl) {
     }
     return document.querySelector('[role="textbox"]');
   } else if (PLATFORM === 'LinkedIn') {
-    const robustEditor = postEl.querySelector('div[contenteditable="true"][role="textbox"]') ||
-                         postEl.querySelector('div[contenteditable="true"]') ||
-                         postEl.querySelector('div[aria-label*="comment" i]') ||
-                         postEl.querySelector('div[aria-label*="评论"]') ||
-                         postEl.querySelector('div[data-placeholder*="comment" i]') ||
-                         postEl.querySelector('.ql-editor') ||
-                         document.querySelector('div[contenteditable="true"][role="textbox"]') ||
-                         document.querySelector('div[aria-label*="comment" i]') ||
-                         document.querySelector('.ql-editor');
-    if (robustEditor) return robustEditor;
+    const qlEditor = postEl.querySelector('.ql-editor') || document.querySelector('.ql-editor');
+    if (qlEditor) return qlEditor;
+    const contentEditableDiv = postEl.querySelector('div[contenteditable="true"]') || document.querySelector('div[contenteditable="true"]');
+    if (contentEditableDiv) return contentEditableDiv;
+    return postEl.querySelector('[role="textbox"]') || document.querySelector('[role="textbox"]');
   } else if (PLATFORM === 'Reddit') {
     return document.querySelector('shreddit-composer div[contenteditable="true"]') || 
            document.querySelector('div[contenteditable="true"]') ||
@@ -427,173 +410,6 @@ function getActiveEditor(postEl) {
     return document.querySelector('textarea[name="text"]');
   }
   return document.querySelector('[contenteditable="true"], [role="textbox"]');
-}
-
-// ── AUTO-PILOT FUNCTIONS ──
-function showLinkedInToast(textToCopy) {
-  navigator.clipboard.writeText(textToCopy).then(() => {
-    let toast = document.getElementById('ls-linkedin-autopilot-toast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.id = 'ls-linkedin-autopilot-toast';
-      toast.style.cssText = `
-        position: fixed; top: 30px; right: 30px; z-index: 2147483647;
-        background: #0a0a0f; border: 1.5px dashed #00ff9d; color: #fff;
-        padding: 12px 20px; border-radius: 8px; font-family: monospace;
-        font-size: 12px; box-shadow: 0 0 20px rgba(0, 255, 157, 0.4);
-        display: flex; align-items: center; gap: 10px;
-        animation: ls-slide-in-right 0.3s ease-out;
-      `;
-      
-      if (!document.getElementById('ls-toast-styles')) {
-        const style = document.createElement('style');
-        style.id = 'ls-toast-styles';
-        style.innerHTML = `
-          @keyframes ls-slide-in-right {
-            from { transform: translateX(120%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-          }
-          @keyframes ls-checkmark-draw {
-            to { stroke-dashoffset: 0; }
-          }
-        `;
-        document.head.appendChild(style);
-      }
-      document.body.appendChild(toast);
-    }
-    
-    toast.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00ff9d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12" style="stroke-dasharray: 22; stroke-dashoffset: 22; animation: ls-checkmark-draw 0.4s ease-out forwards;"></polyline>
-      </svg>
-      <div>
-        <span style="color:#00ff9d; font-weight:bold;">🛰️ LeadSniper Auto-Pilot:</span> Draft Copied!
-        <div style="color:#aaa; font-size:10px; margin-top:2px;">Click Comment field and press <b>Ctrl+V</b> to paste.</div>
-      </div>
-    `;
-    
-    setTimeout(() => {
-      toast.style.transition = 'opacity 0.5s ease';
-      toast.style.opacity = '0';
-      setTimeout(() => {
-        if (toast.parentNode) toast.parentNode.removeChild(toast);
-      }, 500);
-    }, 5000);
-  }).catch(err => {
-    console.warn("[LeadSniper] Clipboard copy failed:", err);
-  });
-}
-
-function injectAutoPilotReadyBadge(editor, postEl) {
-  if (postEl.querySelector('.ls-autopilot-ready-badge')) return;
-  
-  const badge = document.createElement('div');
-  badge.className = 'ls-autopilot-ready-badge';
-  badge.style.cssText = `
-    font-size: 10px; color: #00ff9d; font-family: monospace;
-    background: rgba(0, 255, 157, 0.1); border: 1px solid #00ff9d;
-    padding: 3px 8px; border-radius: 4px; display: inline-flex;
-    align-items: center; gap: 4px; margin-top: 6px; font-weight: bold;
-    animation: ls-pulse-glow 1.5s infinite ease-in-out;
-  `;
-  badge.innerHTML = `🛰️ LeadSniper Auto-Filled (Ready to Send)`;
-  
-  const parent = editor.parentElement;
-  editor.after(badge);
-  
-  if (!document.getElementById('ls-badge-styles')) {
-    const style = document.createElement('style');
-    style.id = 'ls-badge-styles';
-    style.innerHTML = `
-      @keyframes ls-pulse-glow {
-        0%, 100% { box-shadow: 0 0 3px rgba(0,255,157,0.3); opacity: 0.9; }
-        50% { box-shadow: 0 0 8px rgba(0,255,157,0.6); opacity: 1; }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-}
-
-async function typeIntoEditor(editor, text, postEl) {
-  editor.focus();
-  document.execCommand('selectAll', false, null);
-  document.execCommand('delete', false, null);
-  
-  let index = 0;
-  let isInterrupted = false;
-  
-  const interruptHandler = (e) => {
-    if (!isInterrupted && !isScrammed) {
-      isInterrupted = true;
-      console.log("[LeadSniper] Typist simulator interrupted by user. Performing fast-fill...");
-      document.execCommand('selectAll', false, null);
-      document.execCommand('insertText', false, text);
-      cleanup();
-    }
-  };
-  
-  editor.addEventListener('keydown', interruptHandler, { capture: true });
-  editor.addEventListener('mousedown', interruptHandler, { capture: true });
-  
-  const cleanup = () => {
-    editor.removeEventListener('keydown', interruptHandler, { capture: true });
-    editor.removeEventListener('mousedown', interruptHandler, { capture: true });
-    editor.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: ' ', keyCode: 32 }));
-    if (!isScrammed) {
-      injectAutoPilotReadyBadge(editor, postEl);
-    }
-  };
-  
-  const typeChar = () => {
-    if (isInterrupted) return;
-    if (isScrammed) {
-      editor.removeEventListener('keydown', interruptHandler, { capture: true });
-      editor.removeEventListener('mousedown', interruptHandler, { capture: true });
-      return;
-    }
-    if (index < text.length) {
-      const char = text[index++];
-      document.execCommand('insertText', false, char);
-      editor.dispatchEvent(new Event('input', { bubbles: true }));
-      const delay = 20 + Math.random() * 40;
-      setTimeout(typeChar, delay);
-    } else {
-      cleanup();
-    }
-  };
-  
-  typeChar();
-}
-
-async function triggerAutoPilot(postEl, replies) {
-  if (!replies) return;
-  const replyText = replies.Professional || replies.Humor || replies.Director;
-  if (!replyText) return;
-
-  console.log("[LeadSniper] Auto-Pilot triggering outreach sequence...");
-
-  if (PLATFORM === 'X') {
-    const replyBtn = postEl.querySelector('[data-testid="reply"]');
-    if (replyBtn) {
-      await new Promise(r => setTimeout(r, 200 + Math.random() * 200));
-      replyBtn.click();
-      
-      let attempts = 0;
-      const interval = setInterval(() => {
-        const editor = getActiveEditor(postEl);
-        if (editor) {
-          clearInterval(interval);
-          setTimeout(() => {
-            typeIntoEditor(editor, replyText, postEl);
-          }, 300);
-        }
-        attempts++;
-        if (attempts > 15) clearInterval(interval);
-      }, 500);
-    }
-  } else if (PLATFORM === 'LinkedIn') {
-    showLinkedInToast(replyText);
-  }
 }
 
 // ── RPA ──
@@ -664,10 +480,7 @@ async function simulateRPA(postEl, text) {
     inputArea.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: ' ', keyCode: 32 }));
   } else {
     // LinkedIn
-    const commentBtn = postEl.querySelector('button[aria-label*="Comment" i]') ||
-                       postEl.querySelector('button[aria-label*="评论"]') ||
-                       postEl.querySelector('button[data-control-name="comment"]') ||
-                       postEl.querySelector('button[aria-label*="comment" i]');
+    const commentBtn = postEl.querySelector('button[aria-label*="Comment"], button[aria-label*="评论"], button[aria-label*="comment"]');
     if (commentBtn) commentBtn.click();
     await new Promise(r => setTimeout(r, 800));
     
@@ -885,11 +698,6 @@ try {
   });
   
   chrome.storage.onChanged.addListener((changes) => {
-    if (changes.leadsniper_autopilot) {
-      if (changes.leadsniper_autopilot.newValue === true) {
-        isScrammed = false;
-      }
-    }
     if (changes.leadsniper_active) {
       IS_ACTIVE = changes.leadsniper_active.newValue !== false;
       const radar = document.getElementById('ls-radar');
@@ -1012,51 +820,6 @@ function processPost(post) {
       post.style.opacity = "1";
       injectHUD(post, response.Confidence_Score, response.Intelligence_Summary || response.Pain_Point_Analysis, response.Enriched_Profile, response.Replies, 'HOT');
       
-      // AUTO-PILOT INITIATION
-      chrome.storage.local.get(['leadsniper_autopilot', 'leadsniper_autopilot_threshold', 'leadsniper_license_valid', 'leadsniper_license_tier', 'leadsniper_autopilot_daily_count', 'leadsniper_autopilot_daily_limit', 'leadsniper_autopilot_last_reset_date'], (settings) => {
-        const autopilotActive = settings.leadsniper_autopilot === true;
-        const threshold = settings.leadsniper_autopilot_threshold || 85;
-        const hasLicense = settings.leadsniper_license_valid === true;
-        const tier = settings.leadsniper_license_tier || 'basic';
-        
-        if (autopilotActive && hasLicense && tier === 'pro' && !document.hidden && !isScrammed && response.Confidence_Score >= threshold) {
-          const today = new Date().toDateString();
-          let dailyCount = settings.leadsniper_autopilot_daily_count || 0;
-          const dailyLimit = settings.leadsniper_autopilot_daily_limit || 15;
-          const lastReset = settings.leadsniper_autopilot_last_reset_date || "";
-
-          if (lastReset !== today) {
-            dailyCount = 0;
-            chrome.storage.local.set({
-              leadsniper_autopilot_daily_count: 0,
-              leadsniper_autopilot_last_reset_date: today
-            });
-          }
-
-          if (dailyCount < dailyLimit) {
-            chrome.storage.local.set({ leadsniper_autopilot_daily_count: dailyCount + 1 });
-            triggerAutoPilot(post, response.Replies);
-          } else {
-            console.warn(`[LeadSniper] Auto-Pilot daily limit of ${dailyLimit} reached. Skipping pre-fill.`);
-            const warningBadge = document.createElement('div');
-            warningBadge.className = 'ls-autopilot-limit-badge';
-            warningBadge.style.cssText = `
-              font-size: 10px; color: #ff9800; font-family: monospace;
-              background: rgba(255, 152, 0, 0.1); border: 1px solid #ff9800;
-              padding: 3px 8px; border-radius: 4px; display: inline-flex;
-              align-items: center; gap: 4px; margin-top: 6px; font-weight: bold;
-            `;
-            warningBadge.innerHTML = `⚠️ Auto-Pilot Daily Limit (${dailyLimit}) Reached`;
-            const hud = post.querySelector('.ls-hud');
-            if (hud) {
-              hud.appendChild(warningBadge);
-            } else {
-              post.appendChild(warningBadge);
-            }
-          }
-        }
-      });
-
       // AUTO-HUNTER LOCK TRIGGER
       if (IS_AUTO_HUNTER && response.Confidence_Score >= 85) {
         IS_SCROLL_PAUSED = true;
@@ -1079,20 +842,7 @@ function processPost(post) {
 // ══════════════════════════════════════════════════════════
 
 function scanX() {
-  const posts = Array.from(document.querySelectorAll('article[data-testid="tweet"]'));
-  if (posts.length > 0) return posts;
-  
-  // Fallback for X redesigns
-  const cellInnerDivs = document.querySelectorAll('[data-testid="cellInnerDiv"]');
-  const fallbackPosts = [];
-  cellInnerDivs.forEach(div => {
-     const article = div.querySelector('article');
-     if (article) fallbackPosts.push(article);
-     else if (div.textContent.length > 20 && !div.closest('nav') && !div.closest('aside')) fallbackPosts.push(div);
-  });
-  if (fallbackPosts.length > 0) return fallbackPosts;
-  
-  return document.querySelectorAll('article');
+  return document.querySelectorAll('article[data-testid="tweet"]');
 }
 
 function scanLinkedIn() {

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeadSniper — Secure Installation Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&family=Outfit:wght@300;400;600;700&display=swap');
+
+    :root {
+      --bg: #05050a;
+      --surface: #0b0b14;
+      --border: #1e1e2e;
+      --accent: #ff2e4c;
+      --accent-dim: rgba(255, 46, 76, 0.15);
+      --neon-green: #00ff9d;
+      --neon-cyan: #00e5ff;
+      --text: #e0e0e0;
+      --text-dim: #7e7e8f;
+      --font-sans: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-display: 'Orbitron', sans-serif;
+      --glow: 0 0 20px rgba(0, 229, 255, 0.15);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      padding: 60px 20px;
+      position: relative;
+    }
+
+    /* Scanlines */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 229, 255, 0.01) 2px, rgba(0, 229, 255, 0.01) 4px);
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 720px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255,46,76,0.02);
+      position: relative;
+    }
+
+    .wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--neon-cyan), var(--neon-green));
+      border-radius: 12px 12px 0 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 25px;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--neon-cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+
+    /* Step Section */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .step-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      background: rgba(5, 5, 10, 0.3);
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .step-card:hover {
+      border-color: rgba(0, 229, 255, 0.3);
+      box-shadow: var(--glow);
+    }
+
+    .step-num {
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: bold;
+      padding: 2px 10px;
+      border-radius: 100px;
+      letter-spacing: 1px;
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .step-content {
+      color: var(--text-dim);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .step-content b {
+      color: var(--text);
+    }
+
+    .copy-box {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .copy-input {
+      flex: 1;
+      background: #05050a;
+      border: 1px solid var(--border);
+      color: var(--neon-green);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      outline: none;
+      user-select: all;
+    }
+
+    .copy-btn {
+      background: var(--border);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: bold;
+      padding: 0 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+    }
+
+    .alert-card {
+      margin-top: 15px;
+      background: rgba(255, 46, 76, 0.03);
+      border: 1px dashed rgba(255, 46, 76, 0.3);
+      border-radius: 6px;
+      padding: 12px 15px;
+      font-size: 13px;
+      color: #ff8a9a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .success-badge {
+      display: inline-block;
+      margin-top: 12px;
+      background: rgba(0, 255, 157, 0.05);
+      border: 1px solid rgba(0, 255, 157, 0.2);
+      color: var(--neon-green);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    /* Footer styling */
+    footer {
+      margin-top: 40px;
+      padding-top: 25px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    footer a {
+      color: var(--neon-cyan);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <header>
+      <div class="logo">LEADSNIPER 3.0</div>
+    </header>
+
+    <div class="step-list">
+
+      <!-- STEP 1 -->
+      <div class="step-card">
+        <span class="step-num">STEP 01</span>
+        
+        <div class="step-title">Unzip the Package</div>
+        <div class="step-content">
+          Extract the downloaded zip archive (<b>LeadSniper_Secure.zip</b>). You will see a folder named <b>LeadSniper</b> and this instruction guide. Keep the <b>LeadSniper</b> folder in a safe directory where you won't accidentally delete or move it.
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-card">
+        <span class="step-num">STEP 02</span>
+
+        <div class="step-title">Open Extension Manager</div>
+        <div class="step-content">
+          Open Chrome or Edge browser, and enter the following path in the URL address bar to open the Extensions page:
+          <div class="copy-box">
+            <input type="text" readonly class="copy-input" value="chrome://extensions" id="urlChrome">
+            <button class="copy-btn" onclick="copyText('urlChrome')">COPY</button>
+          </div>
+          <div class="copy-box" style="margin-top: 8px;">
+            <input type="text" readonly class="copy-input" value="edge://extensions" id="urlEdge">
+            <button class="copy-btn" onclick="copyText('urlEdge')">COPY</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-card">
+        <span class="step-num">STEP 03</span>
+
+        <div class="step-title">Enable Developer Mode</div>
+        <div class="step-content">
+          Locate the <b>Developer Mode</b> switch in the top-right corner of the extensions page and turn it <b>ON</b>.
+          <div class="alert-card">
+            🛡️ <b>Security Verification:</b> LeadSniper is loaded directly via the browser's developer tools. All your API keys and webhook settings are stored 100% locally on your machine. No scripts run externally.
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step-card">
+        <span class="step-num">STEP 04</span>
+
+        <div class="step-title">Load Unpacked Extension</div>
+        <div class="step-content">
+          1. Click the <b>Load unpacked</b> button in the top-left corner.<br>
+          2. Choose and select the <b>LeadSniper</b> folder that you extracted in Step 1.<br>
+          3. Once loaded, click the <b>Puzzle icon</b> in the browser toolbar, find LeadSniper, and click the <b>Pin icon</b> to pin it for easy access.
+          <br>
+          <span class="success-badge">✅ SYSTEM SECURED & ACTIVE</span>
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      Need help? Contact our tech support at <a href="mailto:hy@hydigital.studio">hy@hydigital.studio</a>
+    </footer>
+  </div>
+
+  <script>
+    function copyText(id) {
+      const copyText = document.getElementById(id);
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // For mobile devices
+      navigator.clipboard.writeText(copyText.value).then(() => {
+        alert("Copied to clipboard: " + copyText.value);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-const STORAGE_KEYS = {
+﻿const STORAGE_KEYS = {
   API_KEY:     'leadsniper_api_key',
   NICHE:       'leadsniper_niche',
   ENDPOINT:    'leadsniper_endpoint',
@@ -76,7 +76,7 @@ function startScramCountdown(cooldownTime) {
         $scramCooldownText.style.display = 'inline-block';
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
-        $scramCooldownText.innerHTML = `<i class="fas fa-hourglass-half"></i> ⏳ ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        $scramCooldownText.innerHTML = `<i class="fas fa-hourglass-half"></i> �?${minutes}:${seconds.toString().padStart(2, '0')}`;
       }
       if ($modePilotBtn) {
         $modePilotBtn.classList.remove('active');
@@ -91,7 +91,7 @@ function startScramCountdown(cooldownTime) {
 
 // Load values
 chrome.storage.local.get([...Object.values(STORAGE_KEYS), 'leadsniper_active', 'leadsniper_autohunter', 'leadsniper_scram_cooldown_until', 'leadsniper_disclaimer_accepted', 'leadsniper_autopilot_daily_count'], (result) => {
-  $apiKey.value     = result[STORAGE_KEYS.API_KEY] || '';
+  $apiKey.value     = result[STORAGE_KEYS.API_KEY] || 'sk-7d97a68e6967406db9ecf35fa986313a';
   $licenseKey.value = result[STORAGE_KEYS.LICENSE] || '';
   $niche.value      = result[STORAGE_KEYS.NICHE]   || 'AI Automation and SaaS Growth';
   if ($valueProp)  $valueProp.value  = result[STORAGE_KEYS.VALUE_PROP] || '';
@@ -228,7 +228,7 @@ function refreshLicenseUI() {
       if ($upgradeBtn) {
         $upgradeBtn.style.display = 'inline-block';
         $upgradeBtn.innerHTML = 'UPGRADE <i class="fas fa-arrow-right"></i>';
-        $upgradeBtn.href = 'https://checkout.dodopayments.com/buy/pdt_0NgefvmouwvkPJZIU4slr?quantity=1';
+        $upgradeBtn.href = 'https://checkout.dodopayments.com/buy/pdt_0NgefVmouwVkPJZIU4sIr?quantity=1';
       }
     } else {
       // Pro tier
@@ -272,7 +272,7 @@ if ($masterSwitch) {
     const active = $masterSwitch.checked;
     chrome.storage.local.set({ leadsniper_active: active });
     updateStatusDot(active);
-    showToast(active ? '🛰️ SCANNER ONLINE' : '💤 SCANNER OFFLINE', !active);
+    showToast(active ? '🛰�?SCANNER ONLINE' : '💤 SCANNER OFFLINE', !active);
   });
 }
 
@@ -297,7 +297,7 @@ if ($modeHunterBtn) {
       } else {
         chrome.storage.local.set({ leadsniper_autohunter: true, leadsniper_autopilot: false }, () => {
           refreshLicenseUI();
-          showToast('⚡ AUTO-HUNTER ONLINE', false);
+          showToast('�?AUTO-HUNTER ONLINE', false);
         });
       }
     });
@@ -312,7 +312,7 @@ if ($modePilotBtn) {
       const cooldownUntil = res.leadsniper_scram_cooldown_until || 0;
 
       if (cooldownUntil > Date.now()) {
-        showToast('⏳ COOLDOWN ACTIVE', true);
+        showToast('�?COOLDOWN ACTIVE', true);
         return;
       }
 
@@ -321,7 +321,7 @@ if ($modePilotBtn) {
         return;
       }
       if (tier === 'basic') {
-        window.open('https://checkout.dodopayments.com/buy/pdt_0NgefvmouwvkPJZIU4slr?quantity=1', '_blank');
+        window.open('https://checkout.dodopayments.com/buy/pdt_0NgefVmouwVkPJZIU4sIr?quantity=1', '_blank');
         return;
       }
 
@@ -338,7 +338,7 @@ if ($modePilotBtn) {
           } else {
             chrome.storage.local.set({ leadsniper_autopilot: true, leadsniper_autohunter: false }, () => {
               refreshLicenseUI();
-              showToast('🛰️ AUTO-PILOT ON', false);
+              showToast('🛰�?AUTO-PILOT ON', false);
             });
           }
         });
@@ -356,7 +356,7 @@ if ($acceptDisclaimerBtn) {
     }, () => {
       if ($disclaimerModal) $disclaimerModal.style.display = 'none';
       refreshLicenseUI();
-      showToast('🛰️ AUTO-PILOT ON', false);
+      showToast('🛰�?AUTO-PILOT ON', false);
     });
   });
 }
@@ -447,7 +447,7 @@ if (documentUpgradeBtn) {
     chrome.storage.local.get(['leadsniper_license_tier'], (res) => {
       const tier = res.leadsniper_license_tier;
       if (tier === 'basic') {
-        window.open('https://checkout.dodopayments.com/buy/pdt_0NgefvmouwvkPJZIU4slr?quantity=1', '_blank');
+        window.open('https://checkout.dodopayments.com/buy/pdt_0NgefVmouwVkPJZIU4sIr?quantity=1', '_blank');
       } else {
         window.open('https://checkout.dodopayments.com/buy/pdt_0NgNoZpvOKdipx3cyM5dX?quantity=1', '_blank');
       }
@@ -467,7 +467,7 @@ if ($proTierPill) {
     chrome.storage.local.get(['leadsniper_license_tier'], (res) => {
       const tier = res.leadsniper_license_tier;
       if (tier !== 'pro') {
-        window.open('https://checkout.dodopayments.com/buy/pdt_0NgefvmouwvkPJZIU4slr?quantity=1', '_blank');
+        window.open('https://checkout.dodopayments.com/buy/pdt_0NgefVmouwVkPJZIU4sIr?quantity=1', '_blank');
       }
     });
   });
@@ -491,7 +491,7 @@ if ($testConnBtn) {
     const model = $apiModel.value.trim() || 'deepseek-chat';
 
     if (!apiKey) {
-      showToast('❌ ENTER API KEY FIRST', true);
+      showToast('�?ENTER API KEY FIRST', true);
       return;
     }
 
@@ -515,14 +515,14 @@ if ($testConnBtn) {
 
       if (res.ok || res.status === 400) {
         $testConnBtn.textContent = "TEST";
-        showToast('✅ CONNECTION VERIFIED', false);
+        showToast('�?CONNECTION VERIFIED', false);
       } else {
         $testConnBtn.textContent = "TEST";
-        showToast('❌ CONNECTION FAILED', true);
+        showToast('�?CONNECTION FAILED', true);
       }
     } catch (err) {
       $testConnBtn.textContent = "TEST";
-      showToast('❌ NETWORK ERROR', true);
+      showToast('�?NETWORK ERROR', true);
     } finally {
       $testConnBtn.disabled = false;
     }
@@ -546,12 +546,12 @@ $saveBtn.addEventListener('click', async () => {
   const dailyLimit = $draftsCount ? parseInt($draftsCount.textContent, 10) : 15;
 
   if (!apiKey || !niche) {
-    showToast('❌ PLEASE FILL API KEY & NICHE', true);
+    showToast('�?PLEASE FILL API KEY & NICHE', true);
     return;
   }
 
   const origText = $saveBtn.innerHTML;
-  $saveBtn.innerHTML = "⌛ INITIALIZING...";
+  $saveBtn.innerHTML = "�?INITIALIZING...";
   $saveBtn.disabled = true;
 
   if (licenseKey) {
@@ -563,13 +563,13 @@ $saveBtn.addEventListener('click', async () => {
       if (!response.success) {
         $saveBtn.innerHTML = origText;
         $saveBtn.disabled = false;
-        showToast('❌ ' + response.error, true);
+        showToast('�?' + response.error, true);
         return;
       }
     } catch(err) {
       $saveBtn.innerHTML = origText;
       $saveBtn.disabled = false;
-      showToast('❌ VERIFICATION FAILED', true);
+      showToast('�?VERIFICATION FAILED', true);
       return;
     }
   }
@@ -591,7 +591,7 @@ $saveBtn.addEventListener('click', async () => {
     $saveBtn.innerHTML = origText;
     $saveBtn.disabled = false;
     refreshLicenseUI();
-    showToast('✅ SECURED & LOCKED', false);
+    showToast('�?SECURED & LOCKED', false);
   });
 });
 
@@ -639,7 +639,7 @@ if ($intentSearchBtn) {
 if ($upgradeFromWarning) {
   $upgradeFromWarning.addEventListener('click', (e) => {
     e.preventDefault();
-    window.open('https://checkout.dodopayments.com/buy/pdt_0NgefvmouwvkPJZIU4slr?quantity=1', '_blank');
+    window.open('https://checkout.dodopayments.com/buy/pdt_0NgefVmouwVkPJZIU4sIr?quantity=1', '_blank');
   });
 }
 

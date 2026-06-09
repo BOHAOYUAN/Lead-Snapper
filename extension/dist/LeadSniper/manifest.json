@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "LeadSniper",
+  "version": "1.0",
+  "description": "B2B Social Intent Sniper — Find high-value leads and pain points on X, LinkedIn, and Reddit.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "sidePanel",
+    "offscreen"
+  ],
+  "host_permissions": [
+    "*://*.twitter.com/*",
+    "*://x.com/*",
+    "*://*.linkedin.com/*",
+    "*://*.reddit.com/*",
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "LeadSniper — Lock Target"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.twitter.com/*",
+        "*://x.com/*",
+        "*://*.linkedin.com/*",
+        "*://*.reddit.com/*",
+        "*://news.ycombinator.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
