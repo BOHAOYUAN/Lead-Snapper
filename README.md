@@ -2,50 +2,46 @@
 
 [![LeadSniper Banner](leadsniper_large_promo_tile.png)](https://bohaoyuan.github.io/LeadSniper/)
 
-> 嘿，我是 Bohao，LeadSniper 的开发者。  
-> 做这个插件的原因很简单：我烦透了每天在 Twitter 和 LinkedIn 上手动翻帖子找客户。手都快废了，效率还低。  
-> 所以我写了这个本地运行的 AI 意图侦察工具。**代码完全开源/透明，数据存在你浏览器本地，我碰不到。**  
->
 > Hey, I'm Bohao, the developer of LeadSniper.  
-> I built this tool because I was tired of manually scrolling through social feeds to find B2B leads.  
-> **It's 100% local-first. Your API keys, credentials, and leads are saved in your browser local storage. I can never touch them.**
+> I built this tool because I was sick and tired of manually scrolling through social feeds to find B2B leads. My hands were about to fall off, and my efficiency was garbage.  
+> So I wrote this local-first AI intent radar. **It's 100% transparent: your API keys, credentials, and leads are saved directly in your browser's local storage. I can never touch them.**
 
 ---
 
-### ⚡ 30-Second Quick Start (极简安装指南)
+### ⚡ 30-Second Quick Start
 
-1. **Extract (解压):** Unzip the package `LeadSniper_Secure.zip` to a folder.
-2. **Extensions Page (打开扩展):** Go to `chrome://extensions/` (or `edge://extensions/`) in your browser.
-3. **Developer Mode (开发者模式):** Toggle **ON** the "Developer mode" in the top-right corner.
-4. **Load Unpacked (加载插件):** Click **"Load unpacked"** in the top-left, select the extracted `LeadSniper/` directory (the one containing `manifest.json`).
-5. **Pin It (固定):** Click the puzzle icon and pin **LeadSniper** to your toolbar.
+1. **Extract:** Download and unzip `LeadSniper_Secure.zip` to a safe folder.
+2. **Extensions:** Open your browser and navigate to `chrome://extensions/` (or `edge://extensions/`).
+3. **Developer Mode:** Toggle **ON** the "Developer mode" switch in the top-right corner.
+4. **Load Unpacked:** Click **"Load unpacked"** in the top-left and select the extracted `LeadSniper/` folder (the one containing `manifest.json`).
+5. **Pin It:** Click the puzzle icon in your browser toolbar and pin **LeadSniper** for easy access.
 
-For a full step-by-step onboarding walkthrough, read the [📖 LeadSniper User Manual / 完整版用户手册](LeadSniper-Documentation.md).
+For a full step-by-step onboarding walkthrough, read the [📖 LeadSniper User Manual](LeadSniper-Documentation.md).
 
 ---
 
 ## 🛰️ Core Features & Capabilities
 
-### 1. 3D Concentric Intent Radar (3D 雷达侧边栏)
+### 1. 3D Concentric Intent Radar
 Organize social leads visually by priority and platform channels. Tapping any target particle node inside the 3D-inspired radar grid directly scrolls your social feed tab to their exact post.
 
-### 2. DeepAI Intent Scoring (AI 意图打分)
-Evaluate posts dynamically with a local scoring engine (0-100) calibrated to your exact target audience and value proposition (DeepSeek V3 / OpenAI).
+### 2. DeepAI Intent Scoring (DeepSeek V3 & OpenAI)
+Evaluate posts dynamically with a local scoring engine (0-100) calibrated to your exact target audience and value proposition.
 *   **"Lethal Rules" Filters:** Automatically weed out self-promotional "expert threads", bots, affiliate loops, and newsletter spam to save API tokens and outreach effort.
 *   **Color-Coded Classification:** Hot Intent leads (score ≥80) get immediate crosshairs, while potential nodes are mapped for on-demand review.
 
-### 3. Ultra-Sniper Mode (PRO Automation / 自动驾驶)
+### 3. Ultra-Sniper Mode (PRO Automation)
 Background auto-capturing of high-intent targets. Let the browser scroll page feeds silently, evaluate posts, and automatically stack hot leads in the Snipe Queue without pausing or interrupting your scrolling.
 
-### 4. Outreach Strategy Matrix (AI 回复草稿)
+### 4. Outreach Strategy Matrix
 Generate **3 distinct outbound drafts** tailored to the target’s specific context:
 *   💻 **Professional:** Value-first, clean, corporate outreach.
 *   🤝 **Humor:** Pattern-breaking, witty cold-humor reply.
 *   👔 **Director:** Storytelling-driven, visionary angle.
 *   *One-click "Copy & Fill" automatically injects drafts into social input fields.*
 
-### 5. Continuous CRM Sync (CRM 同步)
-Connected leads, post URLs, author metadata, and generated outreach logs can be synced instantly with a single click to your outbound CRM pipelines (Notion, HubSpot, or Make.com webhooks).
+### 5. Continuous CRM Sync (Notion / HubSpot / Make.com Webhooks)
+Connected leads, post URLs, author metadata, and generated outreach logs can be synced instantly with a single click to your outbound CRM pipelines.
 
 ---
 

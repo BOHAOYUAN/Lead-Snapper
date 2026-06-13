@@ -1,192 +1,192 @@
-# LeadSniper 用户手册
+# LeadSniper User Manual
 
-**作者：** Bohao Yuan（HY Digital Studio）  
-**官网：** [bohaoyuan.github.io/LeadSniper](https://bohaoyuan.github.io/LeadSniper/)
-
----
-
-## 0. 先聊两句
-
-嘿，我是 Bohao，LeadSniper 的开发者。
-
-我做这个插件的原因很简单：**我烦透了每天在 Twitter 和 LinkedIn 上手动翻帖子找客户**。手都快废了，效率还低。
-
-所以我就想，能不能让 AI 帮我干这活？于是 LeadSniper就诞生了。
-
-它不是什么大公司的产品，就是我一个人写出来的工具。**代码透明，数据存你本地，我碰不到。** 你信得过我，就用；信不过，随便审计。
-
-下面就是怎么装、怎么用。我尽量说人话。
+**Author:** Bohao Yuan (HY Digital Studio)  
+**Website:** [bohaoyuan.github.io/LeadSniper](https://bohaoyuan.github.io/LeadSniper/)
 
 ---
 
-## 1. 你买了之后会拿到什么
+## 0. A Quick Note
 
-付款成功后，你会收到一个压缩包：`LeadSniper_Secure.zip`
+Hey, I'm Bohao, the developer of LeadSniper.
 
-解压后里面有：
+I built this extension for a very simple reason: **I was sick and tired of manually scrolling through Twitter and LinkedIn every single day to find B2B clients**. My hands were about to fall off, and my efficiency was garbage.
 
-- `LeadSniper/` 文件夹 —— 插件的全部源代码（manifest、后台脚本、3D 面板、样式）
-- `How-to-Install.html` —— 一个离线安装指南，中英双语，长得还挺好看
+So I thought, why not let AI do the heavy lifting for me? That's how LeadSniper was born.
 
-没有隐藏的 exe 文件，没有后台安装器，没有远程追踪。**纯浏览器插件。**
+This isn't some corporate product from a massive company; it's just a tool built by me, a solo developer. **The code is transparent, and your data is stored entirely on your own machine. I can't touch it.** If you trust me, use it. If you don't, feel free to audit the code.
 
----
-
-## 2. 安装步骤（手把手）
-
-### Chrome 浏览器
-
-1. 解压 `LeadSniper_Secure.zip` 到一个你找得到的地方，比如 `文档/LeadSniper`
-2. 在地址栏输入 `chrome://extensions/` 并回车
-3. 打开右上角的 **“开发者模式”**
-4. 点击左上角的 **“加载已解压的扩展程序”**
-5. 选择你刚才解压出来的 `LeadSniper/` 文件夹（就是包含 `manifest.json` 的那个）
-6. 安装完成后，点击浏览器右上角的拼图图标，把 LeadSniper 固定在工具栏上
-
-### Edge 浏览器
-
-步骤几乎一样：
-
-1. 解压到本地
-2. 地址栏输入 `edge://extensions/`
-3. 左侧边栏打开“开发人员模式”
-4. 点击“加载解压缩的扩展”
-5. 选择 `LeadSniper/` 文件夹
-6. 点击地址栏旁边的眼睛图标，把插件固定
+Here's how to install and use it. I'll keep it as straightforward as possible.
 
 ---
 
-## 3. 隐私和安全（这是你最关心的）
+## 1. What You Get After Purchase
 
-**一句话：你的数据永远是你的，我碰不到。**
+Once your payment is successful, you will receive a ZIP archive: `LeadSniper_Secure.zip`
 
-- 你的账号、API Key、抓到的客户信息、历史记录……全部存在你浏览器的本地存储里（`chrome.storage.local`），不上传任何服务器
-- AI 扫描时，你的数据直接从你的浏览器发给 DeepSeek 或 OpenAI，不经过我任何中间服务器
-- 你自己带的 API Key，你付多少钱给 DeepSeek 就是多少钱，我不加价
+Unzip it, and you'll find:
 
-**没有隐藏收费，没有数据偷跑，没有中间人。**
+- `LeadSniper/` folder — The full source code of the extension (manifest, background scripts, 3D panel, styling)
+- `How-to-Install.html` — An offline installation guide (designed to look quite nice)
 
----
-
-## 4. 第一次使用：激活 + 配置
-
-点击浏览器工具栏里的 LeadSniper 图标，打开控制中心。
-
-### A. 激活 License Key
-
-你从 Dodo Payments 付款后会收到一封邮件，里面有一个 License Key。
-
-- 在“授权与模型”卡片里粘贴你的 License Key
-- 点击“激活”按钮
-- 控制中心会自动显示你的套餐：LTD Basic（$199）或 LTD Pro（$588）
-
-### B. 配置 API Key（DeepSeek 或 OpenAI）
-
-LeadSniper 默认优化的是 **DeepSeek-V3**，但也兼容任何 OpenAI 格式的 API。
-
-- 在 API Key 输入框里粘贴你的 Key（从 DeepSeek 或 OpenAI 官网拿）
-- 点击“测试”按钮，跑一次诊断
-- 看到“测试通过”就说明好了
-
-**高级选项（一般不折腾）：**
-- Base URL：默认 `https://api.deepseek.com/chat/completions`
-- Model：默认 `deepseek-chat`，你也可以改成 `gpt-4o` 或 `gpt-4o-mini`
+No hidden `.exe` files, no background installers, no remote tracking. **It is a pure browser extension.**
 
 ---
 
-## 5. 设置你的目标客户画像
+## 2. Installation Steps (Step-by-Step)
 
-想让 AI 知道该抓谁、该怎么回复你？填好下面这几项：
+### Chrome Browser
 
-**目标客户 & 痛点**  
-> 示例：正在为客户流失发愁的 B2B SaaS 创始人，想找增长工具……
+1. Extract `LeadSniper_Secure.zip` to a safe place, like `Documents/LeadSniper`
+2. Type `chrome://extensions/` in your browser address bar and press Enter
+3. Enable **"Developer mode"** in the top-right corner
+4. Click **"Load unpacked"** in the top-left corner
+5. Select the `LeadSniper/` folder you just extracted (the one containing `manifest.json`)
+6. Once installed, click the puzzle icon in the top-right of your browser and pin LeadSniper to your toolbar
 
-**你的价值主张**  
-> 示例：LeadSniper——一个浏览器本地的 B2B 社交意图追踪工具，自动抓潜客、生成回复……
+### Edge Browser
 
-**AI 回复风格**（三选一）：
-- 💻 极客风：技术细节多，硬核
-- 🤝 温暖风：咨询式，好说话
-- 👔 高管风：直击 ROI，专业
+The steps are virtually identical:
 
----
-
-## 6. 两种运行模式
-
-### 1. AUTO-HUNTER 模式（普通模式）
-
-**怎么用：** 正常刷你的社交媒体信息流就行。LeadSniper 在后台自动扫描你划过的每一条帖子，判断这个人有没有购买意向。
-
-**适合场景：** 你自己在刷手机/电脑，让 AI 帮你当“副驾驶”，看到高潜客户就给你标出来。
-
-### 2. AUTO-PILOT 模式（仅 Pro 版）
-
-**怎么用：** 半自动模式。AI 自动判断意向、显示分析结果、帮你写好回复草稿。
-
-**第一次开启时会弹出一个免责声明**：AI 写的只是草稿，你必须在发送前自己看一眼、手动修改。**绝不会自动点击“发送”按钮**。
-
-**安全机制：**
-- 模拟人类打字的速度和随机延迟，减少被反爬的风险
-- 只负责复制草稿或模拟打字，**发送键必须你亲自点**
-- 如果出问题，点红色的 🛑 紧急停止按钮，AUTO-PILOT 会立刻停掉，并且强制冷却 30 分钟
+1. Extract the package locally
+2. Type `edge://extensions/` in your address bar
+3. Turn on "Developer mode" on the left sidebar
+4. Click "Load unpacked"
+5. Select the `LeadSniper/` folder
+6. Click the eye icon next to the address bar to pin the extension
 
 ---
 
-## 7. 过滤规则和安全限制
+## 3. Privacy & Security (Your Biggest Concern)
 
-在“过滤与限制”卡片里调整：
+**In short: Your data is yours. I can never touch it.**
 
-**Auto-Fill 分数阈值（70–95）**  
-> 只有分数高于这个值的帖子才会被标记为“高意向客户”。  
-> **建议设为 85**。如果低于 80，会把很多不相关的帖子也扫进来，增加被封号的风险。
+- Your accounts, API keys, captured leads, history... everything is stored directly in your browser's local client storage (`chrome.storage.local`). Nothing is uploaded to my servers.
+- During AI scans, your data is sent directly from your browser to DeepSeek or OpenAI. It does not go through any intermediate server of mine.
+- You bring your own API key. You pay DeepSeek or OpenAI directly for what you use. I don't charge any markup.
 
-**本地关键词黑名单**  
-> 输入你想屏蔽的关键词，用英文逗号隔开。例如：`crypto, airdrop, giveaway`  
-> 包含这些词的帖子会被直接跳过。
-
-**每日草稿上限**：
-- Basic 版（$199）：每天最多 15 条草稿，到了会弹红条提示升级
-- Pro 版（$588）：无限草稿
-
-> ⚠️ 如果你每天发超过 50 条私信/回复，LinkedIn 和 X 很容易把你标记为机器人。建议悠着点，分散时间发。
+**No hidden fees, no data leaks, no middleman.**
 
 ---
 
-## 8. 3D 雷达侧边栏（核心工作区）
+## 4. First-Time Setup: Activation & Configuration
 
-点击控制中心里的“OPEN 3D RADAR”按钮，会打开一个酷炫的侧边栏。
+Click the LeadSniper icon in your toolbar to open the Control Center.
 
-### 界面里有什么：
+### A. Activate Your License Key
 
-- **3D 雷达图**：每个检测到的意向客户会变成一个漂浮的粒子，分数越高粒子越大、脉动越明显。点击粒子可以选中。
-- **伪装仪表盘**：显示实时伪装数据（画布噪点、指纹轮换、住宅 IP 状态等）
-- **实时日志**：滚动显示扫描过程、DOM 解析、webhook 状态
-- **命令行输入**：你可以直接打自然语言指令，比如“提取个人资料”“生成一条回复”，然后点 EXECUTE
+You'll receive a License Key in your email after purchase (processed via Dodo Payments).
 
-### 点击某个客户后，右侧会滑出详情面板：
+- Paste your License Key in the "License & Model" card
+- Click the "Activate" button
+- The Control Center will automatically display your tier: LTD Basic ($199) or LTD Pro ($588)
 
-- **意向分数**（0–100）
-- **分析理由**：为什么这个人值得跟（比如“明确表达了流失客户的痛点”）
-- **公司信息、职位、简介**
-- **3 条 AI 生成的回复草稿**（专业版、幽默版、高管版）
-- **按钮**：
-  - 点击草稿 → 复制到剪贴板
-  - ⚡ DIRECT SNIPE → 复制专业版草稿并自动填入回复框
-  - SYNC TO CRM → 把客户信息推送到你的 CRM
+### B. Configure Your API Key (DeepSeek or OpenAI)
+
+LeadSniper is optimized for **DeepSeek-V3** by default, but it is compatible with any OpenAI-compatible API.
+
+- Paste your API key (obtained from the DeepSeek or OpenAI console) into the API Key input field
+- Click the "Test" button to run a diagnostic test
+- When you see "Test Passed", you're good to go!
+
+**Advanced Options (No need to touch these unless you want to):**
+- Base URL: Defaults to `https://api.deepseek.com/chat/completions`
+- Model: Defaults to `deepseek-chat`. You can also change it to `gpt-4o` or `gpt-4o-mini`.
 
 ---
 
-## 9. CRM 同步（Webhook）
+## 5. Define Your Target Customer Profile
 
-支持把客户信息一键推送到你的 CRM 管道（Airtable、HubSpot、Notion，或者用 Make、Zapier、n8n 搭建的 webhook）。
+Want the AI to know who to look for and how to write the responses? Fill out these three fields:
 
-**设置方法：**
+**Target Customers & Pain Points**  
+> Example: B2B SaaS founders struggling with high customer churn who are actively searching for growth tools...
 
-- 在“Cloud CRM 同步”输入框里粘贴你的 webhook 地址
-- 示例：`https://api.yourcrm.com/webhook` 或 `https://hook.us1.make.com/xxxx`
-- 打开“自动推送”开关，AI 扫到合格客户就会自动推送；关掉的话，需要你手动点“SYNC TO CRM”
+**Your Value Proposition**  
+> Example: LeadSniper — A local-first B2B social intent tracker that automatically detects prospects and generates outreach replies...
 
-**推送的 JSON 格式：**
+**AI Outreach Style** (Choose one):
+- 💻 **Geek:** Highly technical, detailed, and analytical.
+- 🤝 **Warm:** Consultative, friendly, and approachable.
+- 👔 **Executive:** ROI-focused, brief, and highly professional.
+
+---
+
+## 6. Two Run Modes
+
+### 1. AUTO-HUNTER Mode (Standard Mode)
+
+**How to use:** Just browse your social feeds normally. LeadSniper works in the background to scan every post you scroll past, determining if the author shows active buying intent.
+
+**Best for:** When you are browsing social media yourself and want an AI "copilot" to highlight high-potential prospects on the fly.
+
+### 2. AUTO-PILOT Mode (PRO Tier Only)
+
+**How to use:** Semi-automated mode. The AI automatically analyzes intent, shows evaluation results, and drafts outreach replies for you.
+
+**A quick disclaimer pops up when you enable this for the first time:** AI-generated replies are only drafts. You must review and edit them before sending. **The tool will never automatically click the "Send" button.**
+
+**Safety Mechanisms:**
+- Simulates human typing speeds and random delays to minimize anti-scraping risks.
+- Only handles copying drafts or typing them into the inputs; **you must click "Send" yourself**.
+- If something goes wrong, click the red 🛑 **Emergency Stop** button. AUTO-PILOT will halt immediately and trigger a 30-minute cooling period.
+
+---
+
+## 7. Filtering Rules & Safety Limits
+
+Adjust these in the "Filters & Limits" card:
+
+**Auto-Fill Score Threshold (70–95)**  
+> Only posts scoring above this threshold will be flagged as "High Intent Leads".  
+> **Recommended: 85**. Setting it below 80 might scrape irrelevant posts and increase account flags.
+
+**Local Keyword Blacklist**  
+> Enter words you want to ignore, separated by commas. E.g., `crypto, airdrop, giveaway`  
+> Any posts containing these keywords will be skipped automatically.
+
+**Daily Draft Limits:**
+- Basic Tier ($199): Up to 15 drafts per day. A red warning banner will suggest upgrading when reached.
+- Pro Tier ($588): Unlimited drafts.
+
+> ⚠️ Sending more than 50 messages/replies a day on Twitter/X or 30 on LinkedIn can easily get your account flagged as a bot. Keep it natural and spread them out.
+
+---
+
+## 8. 3D Radar Sidebar (Core Workspace)
+
+Click the "OPEN 3D RADAR" button in the Control Center to open a sleek sidebar.
+
+### What's inside the interface:
+
+- **3D Radar Grid**: Each qualified lead is represented by a floating particle. Higher intent scores mean larger and more visible pulses. Click a particle to inspect.
+- **Stealth Dashboard**: Displays real-time anti-fingerprinting metrics (canvas noise status, browser fingerprint rotation, residential IP status, etc.).
+- **Live Console Logs**: Scrolls raw execution steps (DOM scanning status, parsing details, webhook response logs).
+- **Universal Command Line**: Type natural language commands like `"Extract profile info"` or `"Draft custom reply"`, then click EXECUTE.
+
+### Inspecting a Lead (Slides out a detail panel on the right):
+
+- **Intent Score** (0–100)
+- **Qualification Reason**: Why the AI qualified this post (e.g., "Decision-maker explicitly complains about high churn and seeks automation tools").
+- **Company, Job Title, & Bio**
+- **3 AI Outreach Drafts** (Professional, Humor, Executive)
+- **Action Buttons**:
+  - Click a draft → Copy to clipboard.
+  - ⚡ **DIRECT SNIPE** → Copies the professional draft and automatically injects it into the active input box on the page.
+  - **SYNC TO CRM** → Manually push this lead's dossier to your CRM.
+
+---
+
+## 9. CRM Sync (Webhook)
+
+Export lead dossiers to Airtable, HubSpot, Notion, or custom workflows built via Make.com, Zapier, or n8n.
+
+**How to set up:**
+
+- Paste your webhook URL into the "Cloud CRM Sync" input field.
+- Example: `https://api.yourcrm.com/webhook` or `https://hook.us1.make.com/xxxx`
+- Toggle the "Auto Push" switch on to automatically sync hot leads upon detection. If toggled off, you'll need to manually click "SYNC TO CRM".
+
+**Export JSON Payload Format:**
 
 ```json
 {
@@ -195,51 +195,51 @@ LeadSniper 默认优化的是 **DeepSeek-V3**，但也兼容任何 OpenAI 格式
   "target_name": "John Doe",
   "intent_score": 92,
   "category": "COMMERCIAL_LEAD",
-  "analysis_reason": "决策者抱怨客户流失率高、手动流程繁琐，正在找自动化工具",
+  "analysis_reason": "Decision-maker complaining about high customer churn and manual workflows, seeking an automation tool.",
   "profile_data": {
     "company": "Acme SaaS Inc.",
-    "bio": "Acme SaaS 创始人，前 YC 背景，做 B2B 软件"
+    "bio": "Founder of Acme SaaS. Ex-YCombinator. Building future-proof B2B software."
   },
   "outreach_drafts": {
-    "Professional": "Hey John，流失率上升确实头疼。如果你想在不搞复杂仪表盘的情况下自动化客户成功流程，LeadSniper 正好合适。",
-    "Humor": "John，价格调整加 15% 流失率——手动救场的一天开始了。想快速抄近路？聊聊。",
-    "Director": "看到你关于 Acme SaaS 和定价摩擦的帖子。我帮过不少 B2B 创始人在一周内解决这个问题。"
+    "Professional": "Hey John, sorry to hear about the churn increase. If you are looking to automate CS pipelines without complex dashboards, LeadSniper fits that description perfectly. Glad to give you a walk-through.",
+    "Humor": "Hey John, pricing changes and 15% churn—nothing like manual account saving to start the day. If you want a quick shortcut to automate customer success before you lose your mind, let's chat.",
+    "Director": "I saw your note on Acme SaaS and pricing friction. I've worked with B2B founders who automated this exact problem away in a week. Happy to show you how."
   }
 }
 ```
 
 ---
 
-## 10. 防封号小贴士（血的教训）
+## 10. Pro Anti-Ban Tips (Learned the Hard Way)
 
-虽然 LeadSniper 模拟了人类打字速度，但平台的规则始终是严格的。**以下是我踩过的坑，分享给你：**
+Even though LeadSniper simulates human typing speeds, platform algorithms are strict. **Here are the rules I live by to protect my accounts:**
 
-1. **不要用任何自动点击“发送”的脚本**  
-   LeadSniper 只负责写草稿和模拟打字，发送必须你自己点。这是最大的保护。
+1. **Never use automated clickers to send messages**  
+   LeadSniper only writes drafts and types them; clicking the final "Send" button is up to you. This is your best defense against automated detection.
 
-2. **控制每天发送量**  
-   - X（Twitter）：每天不超过 50 条私信/回复  
-   - LinkedIn：每天不超过 30 条
+2. **Manage your daily limits**  
+   - X (Twitter): No more than 50 DMs/replies per day.  
+   - LinkedIn: No more than 30 per day.
 
-3. **如果批量操作，用指纹浏览器**  
-   比如 AdsPower、Multilogin，配合高质量住宅代理。
+3. **For multi-profile operations, use anti-detect browsers**  
+   Browsers like AdsPower or Multilogin, combined with high-quality residential proxies, are essential if you are scaling up.
 
-4. **定期自查是否被影子封禁**  
-   打开浏览器的无痕窗口，登出账号，看看你发的回复是否还可见。  
-   如果看不见了，说明你发太猛了。降量、多休息几天。
-
----
-
-## 📬 联系 & 支持
-
-- **商户主体（收款方）：** Dodo Payments → support@dodopayments.com
-- **技术支持（我本人）：** Bohao Yuan / HY Digital Studio → hy@hydigital.studio
-- **官网** [bohaoyuan.github.io/LeadSniper](https://bohaoyuan.github.io/LeadSniper/)
-
-有任何问题直接邮件找我，我会回。
+4. **Verify if you are shadowbanned**  
+   Open an Incognito window, log out of your social accounts, and check if your replies are visible to public users.  
+   If they are invisible, you went too fast. Slow down and let the account rest for a few days.
 
 ---
 
-好了，手册就这么多。去抓客户吧，别把自己号搞封了就行。
+## 📬 Contact & Support
+
+- **Merchant of Record:** Dodo Payments → support@dodopayments.com
+- **Technical Support:** Bohao Yuan / HY Digital Studio → hy@hydigital.studio
+- **Website:** [bohaoyuan.github.io/LeadSniper](https://bohaoyuan.github.io/LeadSniper/)
+
+Send me an email if you run into any issues. I'll get back to you personally.
+
+---
+
+Go lock in some clients, and don't get your accounts banned!
 
 —— Bohao
