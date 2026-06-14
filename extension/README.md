@@ -1,6 +1,6 @@
 # 🎯 LeadSnapper — B2B Social Intent Radar & One-Click AI Outreach
 
-[![LeadSnapper Banner](leadsnapper_large_promo_tile.png)](https://bohaoyuan.github.io/LeadSnapper/)
+[![LeadSnapper Banner](leadsnapper_large_promo_tile.png)](https://bohaoyuan.github.io/Lead-Snapper/)
 
 > Hey, I'm Bohao, the developer of LeadSnapper.  
 > I built this tool because I was sick and tired of manually scrolling through social feeds to find B2B leads. My hands were about to fall off, and my efficiency was garbage.  

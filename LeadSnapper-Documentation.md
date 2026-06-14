@@ -1,7 +1,7 @@
 # LeadSnapper User Manual
 
 **Author:** Bohao Yuan (HY Digital Studio)  
-**Website:** [bohaoyuan.github.io/LeadSnapper](https://bohaoyuan.github.io/LeadSnapper/)
+**Website:** [bohaoyuan.github.io/Lead-Snapper](https://bohaoyuan.github.io/Lead-Snapper/)
 
 ---
 
@@ -234,7 +234,7 @@ Even though LeadSnapper simulates human typing speeds, platform algorithms are s
 
 - **Merchant of Record:** Dodo Payments → support@dodopayments.com
 - **Technical Support:** Bohao Yuan / HY Digital Studio → hy@hydigital.studio
-- **Website:** [bohaoyuan.github.io/LeadSnapper](https://bohaoyuan.github.io/LeadSnapper/)
+- **Website:** [bohaoyuan.github.io/Lead-Snapper](https://bohaoyuan.github.io/Lead-Snapper/)
 
 Send me an email if you run into any issues. I'll get back to you personally.
 
