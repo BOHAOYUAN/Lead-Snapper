@@ -8,7 +8,8 @@
     "storage",
     "scripting",
     "sidePanel",
-    "offscreen"
+    "offscreen",
+    "nativeMessaging"
   ],
   "host_permissions": [
     "*://*.twitter.com/*",

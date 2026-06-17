@@ -724,17 +724,17 @@
 <div class="pro-modal-overlay" id="proModalOverlay">
   <div class="pro-modal">
     <button class="pro-modal-close" id="proModalClose"><i class="fas fa-times"></i></button>
-    <div class="pro-modal-title"><i class="fas fa-crown" style="color: #F59E0B;"></i> UPGRADE TO PRO ($588)</div>
+    <div class="pro-modal-title"><i class="fas fa-crown" style="color: #F59E0B;"></i> UPGRADE TO PRO ($388)</div>
     <div class="pro-modal-subtitle">Lifetime access. Accelerate your pipeline.</div>
     
     <div class="scarcity-badge" style="margin-bottom: 12px;">
-      🔥 LTD PRO Upgrade: Only <span style="font-weight: 800;">7</span> lifetime seats left!
+      🔥 LTD PRO Upgrade: Only <span style="font-weight: 800;">20</span> lifetime seats left!
     </div>
 
     <div class="pro-feature-list">
       <div class="pro-feature-item">
         <i class="fas fa-check-circle"></i>
-        <span><b>Unlimited Daily Drafts:</b> No more 15/day limits. Auto-Pilot mode fully unlocked.</span>
+        <span><b>Unlimited Daily Drafts:</b> No more daily limits. Auto-Pilot mode fully unlocked.</span>
       </div>
       <div class="pro-feature-item">
         <i class="fas fa-check-circle"></i>
@@ -778,21 +778,25 @@
       </div>
       
       <div class="tier-badge-container" style="display: flex; flex-direction: column; gap: 8px; width: 100%; margin: 8px 0 4px;">
-        <!-- Basic vs Pro Side-by-Side Comparison Pills -->
-        <div style="display: flex; gap: 8px; width: 100%;">
-          <div class="tier-pill active" id="basicTierPill">
-            <span style="font-weight: 800; font-size: 11px;">🔓 BASIC ($199)</span>
-            <span style="font-size: 8px; opacity: 0.85;">Auto-Snapper Mode</span>
+        <!-- Starter vs Pro vs Enterprise Side-by-Side Comparison Pills -->
+        <div style="display: flex; gap: 6px; width: 100%;">
+          <div class="tier-pill active" id="basicTierPill" style="padding: 6px 2px;">
+            <span style="font-weight: 800; font-size: 9px;">🔓 STARTER ($199)</span>
+            <span style="font-size: 8px; opacity: 0.85;">50 drafts/day</span>
           </div>
-          <div class="tier-pill" id="proTierPill">
-            <span style="font-weight: 800; font-size: 11px;"><span id="proLockIcon" style="margin-right: 2px;">🔒</span>PRO ($588)</span>
-            <span style="font-size: 8px; opacity: 0.85;">Auto-Pilot + Unlimited</span>
+          <div class="tier-pill" id="proTierPill" style="padding: 6px 2px;">
+            <span style="font-weight: 800; font-size: 9px;"><span id="proLockIcon" style="margin-right: 2px;">🔒</span>PRO ($388)</span>
+            <span style="font-size: 8px; opacity: 0.85;">Unlimited drafts</span>
+          </div>
+          <div class="tier-pill" id="enterpriseTierPill" style="padding: 6px 2px;">
+            <span style="font-weight: 800; font-size: 9px;"><span id="enterpriseLockIcon" style="margin-right: 2px;">🔒</span>ENTERPRISE ($588)</span>
+            <span style="font-size: 8px; opacity: 0.85;">Daemon + Fleet</span>
           </div>
         </div>
 
         <!-- Scarcity Badge -->
         <div id="scarcityBadge" class="scarcity-badge" style="display: none;">
-          🔥 LTD PRO Upgrade: Only <span id="seatsLeft" style="font-weight: 800;">7</span> lifetime seats left!
+          🔥 LTD PRO Upgrade: Only <span id="seatsLeft" style="font-weight: 800;">20</span> lifetime seats left!
         </div>
       </div>
 
@@ -951,6 +955,57 @@
       <div class="safety-note">
         <i class="fas fa-shield-heart" style="color: #EAB308;"></i> <strong>Human Co-pilot Safety Protocol:</strong><br>
         LeadSnapper operates as a human-AI co-pilot. Generated drafts are either automatically typed or copied to the clipboard, but <b>never automatically sent</b>. You retain final control over when to send, safely bypassing platform automated anti-bot filters.
+      </div>
+    <!-- RAG Case Studies -->
+    <div class="card-panel">
+      <div class="panel-title"><i class="fas fa-folder-open"></i> RAG Case Studies (Business Cases)</div>
+      <label class="label-with-icon" style="margin-bottom: 6px;"><i class="fas fa-tags"></i> CASE STUDY / POSITIONING MATCH</label>
+      <textarea rows="3" id="ragCases" placeholder="Define your business cases here. E.g.
+[Case 1: Web Scraping] We provide custom web crawlers that extract e-commerce data with 99.9% uptime.
+[Case 2: Lead Generation] We help B2B agencies find verified email addresses with 98% delivery rate."></textarea>
+      <div style="font-size: 9px; color: #64748B; line-height: 1.4; margin-top: 6px;">
+        Define case studies with brackets `[Case Name]`. The AI will match and inject the best case study based on post keywords.
+      </div>
+    </div>
+
+    <!-- Desktop Native Controller -->
+    <div class="card-panel">
+      <div class="panel-title"><i class="fas fa-desktop"></i> Desktop Native Controller</div>
+      <div class="row-flex">
+        <span class="label-with-icon"><i class="fas fa-toggle-on"></i> ENABLE NATIVE CONNECTION</span>
+        <label class="checkbox-switch">
+          <input type="checkbox" id="nativeEnabledSwitch">
+          <span class="checkbox-slider"></span>
+        </label>
+      </div>
+      <div class="row-flex" style="margin-top: 8px;">
+        <span class="label-with-icon"><i class="fas fa-wifi"></i> CONNECTION STATUS</span>
+        <span id="nativeStatusBadge" style="font-weight: 800; font-size: 10px; padding: 2px 8px; border-radius: 30px; background: #cbd5e1; color: #475569;">DISCONNECTED</span>
+      </div>
+      <div style="font-size: 9px; color: #64748B; line-height: 1.4; margin-top: 8px;">
+        Saves leads to local SQLite/Excel and runs the Mobile Remote control panel on: <a href="http://localhost:8088" target="_blank" style="color: #2563EB; text-decoration: none; font-weight: 600;">http://localhost:8088</a>
+      </div>
+    </div>
+
+    <!-- Notification Channels (Push) -->
+    <div class="card-panel">
+      <div class="panel-title"><i class="fas fa-bell"></i> Mobile Notification Channels</div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div>
+          <label class="label-with-icon" style="margin-bottom: 3px; font-size: 9px;"><i class="fab fa-apple"></i> BARK KEY (iOS Push Notification)</label>
+          <input type="password" class="input-outline" id="barkKey" placeholder="e.g. jB93jds83j2s (Bark App Key)">
+        </div>
+        <div>
+          <label class="label-with-icon" style="margin-bottom: 3px; font-size: 9px;"><i class="fab fa-telegram"></i> TELEGRAM BOT TOKEN</label>
+          <input type="password" class="input-outline" id="tgToken" placeholder="e.g. 123456789:ABCdefGhI...">
+        </div>
+        <div>
+          <label class="label-with-icon" style="margin-bottom: 3px; font-size: 9px;"><i class="fas fa-user-tag"></i> TELEGRAM CHAT ID</label>
+          <input type="text" class="input-outline" id="tgChatId" placeholder="e.g. 987654321">
+        </div>
+      </div>
+      <div style="font-size: 9px; color: #64748B; line-height: 1.4; margin-top: 8px;">
+        Get Bark key from the Bark iOS app. Get Telegram chat details by chatting with <a href="https://t.me/BotFather" target="_blank" style="color: #2563EB; text-decoration: none; font-weight: 600;">@BotFather</a> and <a href="https://t.me/userinfobot" target="_blank" style="color: #2563EB; text-decoration: none; font-weight: 600;">@userinfobot</a>.
       </div>
     </div>
 

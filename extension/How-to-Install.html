@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LeadSnapper — Secure Installation Guide</title>
+  <title>LeadSnapper V2.0 — Secure Installation Guide</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&family=Outfit:wght@300;400;600;700&display=swap');
 
@@ -226,7 +226,7 @@
 
   <div class="wrapper">
     <header>
-      <div class="logo">LEADSNAPPER 3.0</div>
+      <div class="logo">LEADSNAPPER V2.0</div>
     </header>
 
     <div class="step-list">
@@ -237,13 +237,31 @@
         
         <div class="step-title">Unzip the Package</div>
         <div class="step-content">
-          Extract the downloaded zip archive (<b>LeadSnapper_Secure.zip</b>). You will see a folder named <b>LeadSnapper</b> and this instruction guide. Keep the <b>LeadSnapper</b> folder in a safe directory where you won't accidentally delete or move it.
+          Extract the downloaded zip archive (<b>LeadSnapper_V2_Release.zip</b>). You will find the following core files inside:
+          <ul style="margin-left: 20px; margin-top: 8px;">
+            <li><b>desktop_controller.exe</b> — The local background host executable</li>
+            <li><b>register.bat</b> — Registry script launcher</li>
+            <li><b>LeadSnapper_Secure.zip</b> — Obfuscated Chrome/Edge extension</li>
+          </ul>
         </div>
       </div>
 
       <!-- STEP 2 -->
       <div class="step-card">
         <span class="step-num">STEP 02</span>
+        
+        <div class="step-title">Register the Desktop Host</div>
+        <div class="step-content">
+          Double-click <b>register.bat</b> in the extracted directory. This automatically registers the local messaging host in the Windows Registry (HKCU) for Chrome and Edge browsers.
+          <div class="alert-card" style="border-color: rgba(0, 229, 255, 0.3); color: var(--neon-cyan); background: rgba(0, 229, 255, 0.02);">
+            🛡️ <b>Local Security Moat:</b> LeadSnapper operates 100% locally. The local registry mapping ensures the Chrome extension can communicate directly with your local python executable.
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-card">
+        <span class="step-num">STEP 03</span>
 
         <div class="step-title">Open Extension Manager</div>
         <div class="step-content">
@@ -259,30 +277,29 @@
         </div>
       </div>
 
-      <!-- STEP 3 -->
-      <div class="step-card">
-        <span class="step-num">STEP 03</span>
-
-        <div class="step-title">Enable Developer Mode</div>
-        <div class="step-content">
-          Locate the <b>Developer Mode</b> switch in the top-right corner of the extensions page and turn it <b>ON</b>.
-          <div class="alert-card">
-            🛡️ <b>Security Verification:</b> LeadSnapper is loaded directly via the browser's developer tools. All your API keys and webhook settings are stored 100% locally on your machine. No scripts run externally.
-          </div>
-        </div>
-      </div>
-
       <!-- STEP 4 -->
       <div class="step-card">
         <span class="step-num">STEP 04</span>
 
-        <div class="step-title">Load Unpacked Extension</div>
+        <div class="step-title">Load Extension & Connect</div>
         <div class="step-content">
-          1. Click the <b>Load unpacked</b> button in the top-left corner.<br>
-          2. Choose and select the <b>LeadSnapper</b> folder that you extracted in Step 1.<br>
-          3. Once loaded, click the <b>Puzzle icon</b> in the browser toolbar, find LeadSnapper, and click the <b>Pin icon</b> to pin it for easy access.
+          1. Turn on <b>Developer Mode</b> in the top-right corner of the Extensions page.<br>
+          2. Drag and drop <b>LeadSnapper_Secure.zip</b> into the browser to install it, or unzip it and click <b>Load unpacked</b> selecting the folder.<br>
+          3. Pin the extension. Open the popup, paste your API Keys, and enable <b>Desktop Native Connection</b>. The status badge will turn green showing <b>CONNECTED</b>.
           <br>
-          <span class="success-badge">✅ SYSTEM SECURED & ACTIVE</span>
+          <span class="success-badge">✅ SYSTEM SECURED & CONNECTED</span>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step-card">
+        <span class="step-num">STEP 05</span>
+
+        <div class="step-title">PWA Mobile Remote Setup</div>
+        <div class="step-content">
+          1. Keep <b>desktop_controller.exe</b> running on your PC.<br>
+          2. On your iPhone or Android browser, enter your PC's local IP address (e.g. <b>http://192.168.1.100:8088</b>).<br>
+          3. Tap the browser share button and click <b>"Add to Home Screen"</b> for a full-screen, native remote command experience.
         </div>
       </div>
 

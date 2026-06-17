@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LeadSnapper — B2B Social Lead Intent Radar & Passive AI Capture</title>
-  <meta name="description" content="Stop cold emailing dead databases. Scan real-time social signals on Twitter, LinkedIn & Reddit, lock high-intent buyers, and generate custom AI outreach drafts on autopilot.">
+  <title>LeadSnapper V2.0 — Turn Your Computer Into a 24/7 AI Sales Employee</title>
+  <meta name="description" content="Turn your browser and computer into a 24/7 AI sales employee. Automatically scrolls feeds, qualifies prospects with local RAG, and pushes high-intent leads to your iPhone or Telegram. One-time purchase, zero subscription fees.">
+  <meta name="robots" content="index, follow">
   
   <!-- Google Fonts: Inter & Outfit -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -775,20 +776,26 @@
 
     .pricing-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 480px));
+      grid-template-columns: repeat(3, minmax(0, 360px));
       gap: 30px;
       justify-content: center;
       margin-top: 40px;
     }
+    @media (max-width: 1024px) {
+      .pricing-grid {
+        grid-template-columns: repeat(2, minmax(0, 380px));
+      }
+    }
     @media (max-width: 768px) {
       .pricing-grid {
         grid-template-columns: 1fr;
-        max-width: 480px;
+        max-width: 440px;
         margin: 40px auto 0;
       }
     }
 
     .pricing-card {
+      border: 1px solid var(--border-color);
       border-radius: 24px;
       padding: 40px;
       position: relative;
@@ -1026,41 +1033,230 @@
     .footer-link:hover {
       color: var(--text-muted);
     }
+
+    /* Founder Section */
+    .founder-section {
+      background: rgba(15, 19, 34, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 80px;
+      margin-top: 20px;
+    }
+    @media (max-width: 640px) {
+      .founder-section {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 24px;
+        padding: 30px 20px;
+      }
+    }
+    .founder-avatar-wrap {
+      text-align: center;
+    }
+    .founder-avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-blue);
+      box-shadow: var(--shadow-glow);
+    }
+    .founder-name {
+      margin-top: 14px;
+      font-family: var(--font-hud);
+      font-weight: 800;
+      font-size: 18px;
+      color: #ffffff;
+    }
+    .founder-title {
+      font-size: 11px;
+      color: var(--accent-blue);
+      font-weight: 600;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .founder-social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      margin-top: 20px;
+    }
+    @media (max-width: 640px) {
+      .founder-social-links {
+        justify-content: center;
+      }
+    }
+    .founder-social-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .remote-section {
+      padding: 100px 0;
+      background: radial-gradient(circle at 10% 50%, rgba(59, 130, 246, 0.04) 0%, transparent 60%);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .remote-grid {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 60px;
+      align-items: center;
+    }
+    @media (max-width: 1024px) {
+      .remote-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+    .remote-mockup-wrap {
+      position: relative;
+      border-radius: 28px;
+      padding: 10px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-card), 0 0 30px rgba(59, 130, 246, 0.05);
+      transition: transform 0.3s ease;
+      max-width: 440px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .remote-mockup-wrap:hover {
+      transform: translateY(-4px) scale(1.01);
+    }
+    .remote-img {
+      width: 100%;
+      border-radius: 20px;
+      display: block;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .remote-badge-floating {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(16, 185, 129, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #070913;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 800;
+      font-family: var(--font-hud);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+    .remote-badge-floating i {
+      animation: pulse-light 1.5s infinite;
+    }
+    .push-moat-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .push-moat-item {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      border-radius: 16px;
+      background: rgba(15, 19, 34, 0.4);
+      border: 1px solid var(--border-color);
+      transition: all 0.25s;
+    }
+    .push-moat-item:hover {
+      background: rgba(15, 19, 34, 0.7);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+    .push-moat-icon {
+      font-size: 20px;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background: rgba(59, 130, 246, 0.08);
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+    .push-moat-icon.green {
+      color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.08);
+    }
+    .push-moat-icon.amber {
+      color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.08);
+    }
+    .push-moat-text h4 {
+      font-family: var(--font-hud);
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .push-moat-text p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
 
+  <noscript>
+    <div style="background: var(--accent-red); color: white; padding: 12px; text-align: center; font-weight: bold; position: fixed; top: 0; left: 0; right: 0; z-index: 10000; font-family: var(--font-sans);">
+      ⚠️ LeadSnapper requires JavaScript to display the interactive radar scanning console. Please enable JavaScript in your browser settings.
+    </div>
+  </noscript>
+
   <!-- Navigation Header -->
   <header class="glass">
     <div class="container nav-wrap">
-      <a href="#" class="logo">
+      <a href="#hero" class="logo">
         <i class="fas fa-crosshairs"></i> LeadSnapper
       </a>
       <nav>
         <a href="#features" class="nav-link">Features</a>
         <a href="#demo" class="nav-link">Live Radar Demo</a>
+        <a href="#remote" class="nav-link">Mobile Remote</a>
         <a href="#pricing" class="nav-link">Pricing</a>
         <a href="#faqs" class="nav-link">FAQs</a>
       </nav>
       <a href="#pricing" class="btn btn-outline" style="font-size: 12px; padding: 8px 16px;">
-        <i class="fas fa-download"></i> Get Extension
+        <i class="fas fa-crown"></i> Claim LTD Spot
       </a>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="hero-section">
+  <section class="hero-section" id="hero">
     <div class="container hero-grid">
       <!-- Hero Copy -->
       <div class="hero-content">
         <div class="badge-outline">
-          <i class="fas fa-satellite-dish"></i> Real-time social signal acquisition
+          <i class="fas fa-satellite-dish"></i> v2.0 Digital Sales Agent
         </div>
-        <h1 class="gradient-text">Stop cold emailing dead databases. Find high-intent leads while you scroll.</h1>
-        <p>LeadSnapper runs silently in your browser, acts as an active signal intelligence radar on Twitter, LinkedIn & Reddit, and transforms a 5-minute manual sales grind into a 3-second, one-click workflow.</p>
+        <h1 class="gradient-text">Turn Your Computer Into a 24/7 AI Sales Employee — With Mobile Remote Control</h1>
+        <p>LeadSnapper V2.0 operates as an autonomous local agent. It runs browser RPA sequences to auto-scroll feeds on Twitter, LinkedIn & Reddit, leverages a local RAG engine to qualify buyers with zero AI markup, and pushes hot leads straight to your phone via Bark or Telegram.</p>
         <div class="hero-ctas">
           <a href="#pricing" class="btn btn-primary" id="heroBuyBtn">
-             Claim Early LTD Spot <i class="fas fa-arrow-right"></i>
+             Get V2.0 Lifetime Access <i class="fas fa-arrow-right"></i>
           </a>
           <a href="https://youtu.be/F9PbqSR6PN4" target="_blank" class="btn btn-outline">
             <i class="fas fa-play"></i> Watch 60s Demo
@@ -1069,20 +1265,18 @@
         <div class="hero-bullets">
           <div class="hero-bullet-item">
             <i class="fas fa-check-circle"></i>
-            <span>Instant intent qualification based on your exact target niche.</span>
+            <span><b>24/7 Autopilot:</b> Direct your local desktop agent via your PWA Mobile Remote from anywhere.</span>
           </div>
           <div class="hero-bullet-item">
             <i class="fas fa-check-circle"></i>
-            <span>"Smart Rules" filters automatically weed out newsletter/promo spam.</span>
+            <span><b>Local RAG Matcher:</b> Automatically aligns leads against your customized product case studies.</span>
           </div>
           <div class="hero-bullet-item">
             <i class="fas fa-check-circle"></i>
-            <span>Generates 3 customized reply hooks (Professional, Humor, Director).</span>
+            <span><b>Zero-Latency Alerts:</b> High-intent leads (Score ≥ 80) push immediately to your iPhone/Telegram.</span>
           </div>
         </div>
-      </div>
-
-      <!-- Hero Interactive Radar Widget -->
+      </div>      <!-- Hero Interactive Radar Widget -->
       <div class="demo-container" id="demo">
         <div class="demo-header">
           <div class="demo-title">
@@ -1137,9 +1331,8 @@
             <div class="hud-section" style="flex-grow: 1; display: flex; flex-direction: column; margin-bottom: 0;">
               <div class="hud-section-title"><i class="fas fa-comment-dots"></i> Contextual AI Drafts</div>
               <div class="hud-tabs">
-                <button class="hud-tab-btn active" data-tab="Professional">Professional</button>
-                <button class="hud-tab-btn" data-tab="Humor">Humor</button>
-                <button class="hud-tab-btn" data-tab="Director">Director</button>
+                <button class="hud-tab-btn active" data-tab="ShortOpener">Short DM Opener</button>
+                <button class="hud-tab-btn" data-tab="LinkedInRequest">LinkedIn Connection Note</button>
               </div>
               <div class="hud-draft-container">
                 <div class="hud-draft-body" id="hudDraft">Select a target to preview outbound drafts.</div>
@@ -1191,7 +1384,7 @@
           <tr>
             <td class="col-label">Draft Personalization</td>
             <td class="col-old"><i class="fas fa-times-circle"></i> Wait 3-5 mins drafting manual replies or feeding GPT.</td>
-            <td class="col-new"><i class="fas fa-check-circle"></i> 3 distinct outreach styles tailored to context in 3 seconds.</td>
+            <td class="col-new"><i class="fas fa-check-circle"></i> 2 distinct outreach strategies tailored to context in 3 seconds.</td>
           </tr>
           <tr>
             <td class="col-label">CRM Sync</td>
@@ -1200,6 +1393,62 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+  </section>
+
+  <!-- PWA Mobile Remote & Push Notification Section -->
+  <section class="remote-section" id="remote">
+    <div class="container">
+      <div class="remote-grid">
+        <!-- Mockup Display Column -->
+        <div class="remote-mockup-wrap">
+          <img src="mobile_remote_mockup.png" alt="LeadSnapper Mobile PWA Remote Control Console" class="remote-img">
+          <span class="remote-badge-floating">
+            <i class="fas fa-satellite-dish"></i> LIVE LOCAL SYNC
+          </span>
+        </div>
+        
+        <!-- Feature Highlights Column -->
+        <div>
+          <span class="badge-outline"><i class="fas fa-mobile-screen-button"></i> Mobile Command Moat</span>
+          <h2 style="font-family: var(--font-hud); font-size: 36px; font-weight: 900; margin-top: 14px; margin-bottom: 20px; line-height: 1.2;">
+            Control Your AI Agent From Your Pocket
+          </h2>
+          <p style="font-size: 15.5px; color: var(--text-muted); line-height: 1.6;">
+            LeadSnapper V2.0 isn't just a browser extension—it is a dual-device local agent pipeline. Direct your desk agent to hunt for leads while you are out getting coffee. 
+          </p>
+          
+          <ul class="push-moat-list">
+            <!-- Item 1: PWA Remote -->
+            <li class="push-moat-item">
+              <div class="push-moat-icon"><i class="fas fa-bolt"></i></div>
+              <div class="push-moat-text">
+                <h4>Zero-Install Mobile PWA</h4>
+                <p>No App Store friction. Access the local controller port via secure Wi-Fi or encrypted tunnel (VLESS/Clash) on iOS & Android. Add to Home Screen for a seamless full-screen app experience.</p>
+              </div>
+            </li>
+            
+            <!-- Item 2: Real-time Alert Moat -->
+            <li class="push-moat-item">
+              <div class="push-moat-icon green"><i class="fas fa-bell"></i></div>
+              <div class="push-moat-text">
+                <h4>Bark iOS & Telegram Real-time Pushes</h4>
+                <p>The moment our local agent matches an active buyer (Score ≥ 80) against your local RAG parameters, it issues a push notification directly to your phone. Zero latency, instant engagement.</p>
+              </div>
+            </li>
+            
+            <!-- Item 3: Voice/Text Compiler -->
+            <li class="push-moat-item">
+              <div class="push-moat-icon amber"><i class="fas fa-microphone"></i></div>
+              <div class="push-moat-text">
+                <h4>Dictate Search Commands</h4>
+                <p>Natively use your phone's voice-to-text to say <i>"Help me find developers talking about PostgreSQL speed bottlenecks"</i>. Our local server compiles it to browser RPA steps instantly.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1240,7 +1489,7 @@
         <div class="feature-card glass">
           <div class="feature-icon-box"><i class="fas fa-comment-medical"></i></div>
           <h3>Multi-Strategy Outbox</h3>
-          <p>Switch Outreach tactics instantly. Choose Professional for corporate, Humor for breaking patterns, and Director for value-first storytelling. Insert with a single click.</p>
+          <p>Switch Outreach tactics instantly. Choose Short DM Opener for quick Twitter/LinkedIn messaging, and LinkedIn Connection Note for personalized connection requests. Insert with a single click.</p>
         </div>
         <!-- Feature 6 -->
         <div class="feature-card glass">
@@ -1256,45 +1505,54 @@
   <section class="pricing-section" id="pricing">
     <div class="container">
       <div class="section-header">
-        <span class="badge-outline"><i class="fas fa-tags"></i> Early Adopter Pricing</span>
+        <span class="badge-outline"><i class="fas fa-tags"></i> Founding BYOK Spots</span>
         <h2>Choose Your Growth Velocity</h2>
         <p style="margin-top: 14px; font-size: 15px;">Secure lifetime buy-out rates before we transition to a subscription pricing plan ($49/mo and $99/mo).</p>
       </div>
 
       <!-- Scarcity Indicator -->
       <div class="scarcity-banner-wrap">
-        <span class="scarcity-pill">
-          <i class="fas fa-exclamation-triangle"></i> LTD PRO TIER: Only 7 lifetime seats left!
+        <span class="scarcity-pill" style="background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.3); color: var(--accent-amber);">
+          <i class="fas fa-exclamation-triangle"></i> EXCLUSIVE: Only 20 Founding BYOK Lifetime Licenses Available!
         </span>
       </div>
 
       <div class="pricing-grid">
-        <!-- Basic Card -->
+        <!-- Starter Card -->
         <div class="pricing-card glass">
-          <div class="price-tier">LTD Basic</div>
+          <div class="price-tier">LTD Starter</div>
           <div class="price-value">
             <span class="price-amount">$199</span>
             <span class="price-period">/ lifetime access</span>
           </div>
-          <p class="price-desc">Perfect for solo founders and developers testing automated social sales loops.</p>
+          <p class="price-desc">Perfect for solo founders and developers testing automated B2B sales loops.</p>
           
           <ul class="price-features-list">
             <li class="price-feature-item">
               <i class="fas fa-check"></i>
-              <span><b>Auto-Snapper Mode:</b> Automatic scrolling & signal scanning</span>
+              <span><b>Auto-Snapper RPA:</b> Auto-scroll & scanning sequences</span>
             </li>
             <li class="price-feature-item">
               <i class="fas fa-check"></i>
-              <span><b>15 Daily Drafts:</b> AI-generated outreach templates</span>
+              <span><b>50 Daily Qualifications:</b> Ideal for small campaigns</span>
             </li>
             <li class="price-feature-item">
               <i class="fas fa-check"></i>
-              <span><b>12 Months Free Updates:</b> Core platform features and patches</span>
+              <span><b>1 Active Device License:</b> Core platform features</span>
+            </li>
+            <li class="price-feature-item">
+              <i class="fas fa-check"></i>
+              <span><b>Standard CRM Webhooks:</b> Log handles and drafts</span>
+            </li>
+            <li class="price-feature-item">
+              <i class="fas fa-check"></i>
+              <span><b>12 Months Free Updates:</b> Core patches and fixes</span>
             </li>
           </ul>
 
-          <a href="#" class="btn btn-outline" style="width: 100%;" id="basicBuyBtn">
-            Claim Basic LTD <i class="fas fa-arrow-right"></i>
+          <!-- Replace href with your Gumroad / Lemon Squeezy checkout link -->
+          <a href="https://checkout.leadsnapper.com/buy/starter" target="_blank" rel="noopener" class="btn btn-outline" style="width: 100%;" id="starterBuyBtn">
+            Claim Starter LTD <i class="fas fa-arrow-right"></i>
           </a>
           <div class="price-byok-note">BYOK (Bring Your Own Key) model enabled.</div>
         </div>
@@ -1304,40 +1562,92 @@
           <div class="pricing-badge"><i class="fas fa-star"></i> Recommended</div>
           <div class="price-tier" style="color: var(--accent-amber);">LTD Pro</div>
           <div class="price-value">
-            <span class="price-amount">$588</span>
+            <span class="price-amount">$388</span>
             <span class="price-period">/ lifetime access</span>
           </div>
-          <p class="price-desc">Built for aggressive growth hackers, digital agencies, and B2B outreach directors.</p>
+          <p class="price-desc">Built for aggressive growth hackers, digital agencies, and B2B directors.</p>
           
           <ul class="price-features-list">
             <li class="price-feature-item highlight">
               <i class="fas fa-check-circle"></i>
-              <span><b>Unlimited Daily Drafts</b> with auto-filling controls</span>
+              <span><b>Everything in Starter Tier</b></span>
             </li>
             <li class="price-feature-item highlight">
               <i class="fas fa-check-circle"></i>
-              <span><b>3D Concentric Radar Grid</b> with intent scoring telemetry</span>
+              <span><b>Concentric Radar HUD:</b> 3D intent scoring telemetry</span>
             </li>
             <li class="price-feature-item highlight">
               <i class="fas fa-check-circle"></i>
-              <span><b>Ultra-Snapper Mode:</b> Background auto-queueing of intent posts (≥80)</span>
+              <span><b>Unlimited Daily Drafts:</b> Scale campaigns without limits</span>
             </li>
             <li class="price-feature-item highlight">
               <i class="fas fa-check-circle"></i>
-              <span><b>Priority Support:</b> Direct founder pipeline & 24h response time</span>
+              <span><b>Local RAG Engine:</b> Auto-align leads against case studies</span>
             </li>
             <li class="price-feature-item highlight">
               <i class="fas fa-check-circle"></i>
-              <span><b>12 Months Free Updates:</b> Covers new platforms and AI model integrations. <i>After 12 months, software continues working indefinitely. Renew updates at 20% or stay on the last version forever.</i></span>
+              <span><b>Mobile PWA Integration:</b> Pocket remote control</span>
             </li>
             <li class="price-feature-item highlight">
               <i class="fas fa-check-circle"></i>
-              <span><b>Founder Configuration Audit:</b> Free 1-on-1 niche setup coaching session (Value $99)</span>
+              <span><b>Bark & TG Alerts:</b> Real-time push notifications</span>
+            </li>
+            <li class="price-feature-item highlight">
+              <i class="fas fa-check-circle"></i>
+              <span><b>3 Device Licenses:</b> Run multiple campaigns</span>
+            </li>
+            <li class="price-feature-item highlight">
+              <i class="fas fa-check-circle"></i>
+              <span><b>12 Months Free Updates:</b> Core updates & layouts adapt</span>
             </li>
           </ul>
 
-          <a href="#" class="btn btn-amber" style="width: 100%; font-size: 15px;" id="proBuyBtn">
+          <!-- Replace href with your Gumroad / Lemon Squeezy checkout link -->
+          <a href="https://checkout.leadsnapper.com/buy/pro" target="_blank" rel="noopener" class="btn btn-amber" style="width: 100%; font-size: 15px;" id="proBuyBtn">
             Get Pro Lifetime Access <i class="fas fa-crown"></i>
+          </a>
+          <div class="price-byok-note">BYOK (Bring Your Own Key) model enabled.</div>
+        </div>
+
+        <!-- Enterprise Card -->
+        <div class="pricing-card glass">
+          <div class="price-tier">LTD Enterprise</div>
+          <div class="price-value">
+            <span class="price-amount">$588</span>
+            <span class="price-period">/ lifetime access</span>
+          </div>
+          <p class="price-desc">The ultimate command center for agency operators & B2B enterprises.</p>
+          
+          <ul class="price-features-list">
+            <li class="price-feature-item">
+              <i class="fas fa-check"></i>
+              <span><b>Everything in Pro Tier</b></span>
+            </li>
+            <li class="price-feature-item">
+              <i class="fas fa-check"></i>
+              <span><b>Background Automation Daemon:</b> No browser GUI required</span>
+            </li>
+            <li class="price-feature-item">
+              <i class="fas fa-check"></i>
+              <span><b>Multi-Session Manager:</b> Run multi-account queues</span>
+            </li>
+            <li class="price-feature-item">
+              <i class="fas fa-check"></i>
+              <span><b>Unlimited Active Devices:</b> Command a fleet of digital workers</span>
+            </li>
+            <li class="price-feature-item">
+              <i class="fas fa-check"></i>
+              <span><b>1-on-1 Niche Calibrator:</b> Free founder campaign review</span>
+            </li>
+            <li class="price-feature-item">
+              <i class="fas fa-check"></i>
+              <span><b>Lifetime Free Updates:</b> Never pay for another update</span>
+            </li>
+          </ul>
+
+          <!-- Replace href with your Gumroad / Lemon Squeezy checkout link -->
+          <a href="https://checkout.leadsnapper.com/buy/enterprise" target="_blank" rel="noopener" class="btn btn-outline" style="width: 100%;" id="enterpriseBuyBtn">
+            Claim Enterprise LTD <i class="fas fa-arrow-right"></i>
           </a>
           <div class="price-byok-note">BYOK (Bring Your Own Key) model enabled.</div>
         </div>
@@ -1410,6 +1720,68 @@
           </div>
         </div>
       </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>How does the Mobile PWA remote control connect to my desktop client securely?</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            LeadSnapper's desktop controller hosts a lightweight local HTTP server on port 8088. To connect your phone, simply visit your computer's local IP address (e.g. http://192.168.X.X:8088) while on the same Wi-Fi network. For remote secure access when you are out, you can tunnel connection securely (e.g. via VLESS/Clash/Tailscale), ensuring no third-party cloud database ever intercepts or holds your lead intelligence logs.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>Are there any recurring costs for push notifications (Bark & Telegram)?</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            No. Bark and Telegram are completely free, secure APIs. Bark is an open-source push notification client for iOS, and Telegram Bots are natively free. LeadSnapper pushes notifications directly from your local computer to their public endpoints using your private integration tokens. Zero middleman markup, zero monthly subscriptions.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Me Section -->
+  <section class="container" id="about">
+    <div class="founder-section glass">
+      <div class="founder-avatar-wrap">
+        <img src="haoyuan.jpg" alt="Haoyuan Bo" class="founder-avatar">
+        <div class="founder-name">Haoyuan Bo</div>
+        <div class="founder-title">Founder & Growth Engineer</div>
+      </div>
+      <div>
+        <span class="badge-outline" style="margin-bottom: 16px;"><i class="fas fa-user-tie"></i> Meet the Founder</span>
+        <h3 style="font-family: var(--font-hud); font-size: 26px; font-weight: 900; color: #ffffff; margin-bottom: 16px;">Hey, I'm Haoyuan!</h3>
+        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px;">
+          I'm a B2B growth engineer specializing in building custom automation pipelines, browser extensions, and semantic search systems. 
+        </p>
+        <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">
+          I built LeadSnapper to eliminate the manual grind of social prospecting. By matching real-time social intent signals with AI, it helps outbound teams connect with buyers at the perfect time. If you have any feedback, custom feature requests, or need help setting up your outbound campaign, let's connect!
+        </p>
+        <div class="founder-social-links">
+          <a href="https://www.linkedin.com/in/haoyuan-bo-127908392/" target="_blank" class="founder-social-link">
+            <i class="fab fa-linkedin" style="color: #0a66c2; font-size: 16px;"></i> LinkedIn
+          </a>
+          <a href="https://x.com/bo_haoyuan94776" target="_blank" class="founder-social-link">
+            <i class="fab fa-twitter" style="color: #1da1f2; font-size: 16px;"></i> Twitter (X)
+          </a>
+          <a href="https://www.reddit.com/user/Icy_Antelope_2961/?screen_view_count=1" target="_blank" class="founder-social-link">
+            <i class="fab fa-reddit-alien" style="color: #ff4500; font-size: 16px;"></i> Reddit
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=100091837667555" target="_blank" class="founder-social-link">
+            <i class="fab fa-facebook" style="color: #1877f2; font-size: 16px;"></i> Facebook
+          </a>
+          <a href="mailto:haoyuanbo626@gmail.com" class="founder-social-link">
+            <i class="fas fa-envelope" style="color: #ea4335; font-size: 16px;"></i> haoyuanbo626@gmail.com
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1420,7 +1792,7 @@
         © 2026 LeadSnapper. Zero-perception social intent capture solutions by <a href="mailto:hy@hydigital.studio" style="color: var(--text-muted); text-decoration: none;">hy@hydigital.studio</a>.
       </div>
       <div class="footer-links">
-        <a href="#" class="footer-link">Privacy Policy</a>
+        <a href="privacy.html" class="footer-link">Privacy Policy</a>
         <a href="#" class="footer-link">Terms of Service</a>
         <a href="mailto:hy@hydigital.studio" class="footer-link">Support & Contact</a>
       </div>
@@ -1450,9 +1822,8 @@
         bio: "Founder & CEO. Sourcing automated B2B outbound engines that don't trigger domain spam blockers. High acquisition intent.",
         reason: "Explicit keyword match: Sourcing high-intent lead software. Explicitly complaining about database deliverability.",
         drafts: {
-          Professional: "Hello Alex, saw your interest in outbound automation. We've built an intent-based chrome overlay that bypasses standard email deliverability bottlenecks by targeting active social signals. Let's connect.",
-          Humor: "Hey Alex, saw you're hunting for outreach tools that don't end up in spam. Our radar finds hot leads on LinkedIn before they convert to newsletters. No markups, no API markups, just pure signals.",
-          Director: "Alex, standard sales pipelines are breaking down. LeadSnapper acts as tactical signal intelligence, turning a 5-minute search into a 3-second snipe. Let's scale your operations."
+          ShortOpener: "Hello Alex, saw your interest in outbound automation. We've built an intent-based chrome overlay that bypasses standard email deliverability bottlenecks by targeting active social signals. Let's connect.",
+          LinkedInRequest: "Alex, standard sales pipelines are breaking down. LeadSnapper acts as tactical signal intelligence, turning a 5-minute search into a 3-second capture. Let's scale your operations."
         }
       },
       {
@@ -1468,9 +1839,8 @@
         bio: "Growth marketer helping B2B companies scale LinkedIn and Twitter acquisition. Ex-HubSpot. Heavy outreach practitioner.",
         reason: "Active workflow pain point: Spending 4+ hours daily on manual scrolling and copy-pasting lead templates.",
         drafts: {
-          Professional: "Hi Sarah, saw your breakdown of B2B prospecting hours. LeadSnapper runs directly in your browser, automating lead scoring and personalizing drafts in one click. Would love to show you a quick demo.",
-          Humor: "Sarah, 4 hours a day on copy-paste is a manual labor crime. Let's let the browser extension do the heavy lifting while you focus on closing. We support LinkedIn, Twitter, and Reddit.",
-          Director: "Sarah, automation isn't about replacing the human; it's about magnifying their output. Let's turn those 4 hours of copy-pasting into 4 minutes of tactical validation."
+          ShortOpener: "Hi Sarah, saw your breakdown of B2B prospecting hours. LeadSnapper runs directly in your browser, automating lead scoring and personalizing drafts in one click. Would love to show you a quick demo.",
+          LinkedInRequest: "Sarah, 4 hours a day on copy-paste is a manual labor crime. Let's let the browser extension do the heavy lifting while you focus on closing. We support LinkedIn, Twitter, and Reddit."
         }
       },
       {
@@ -1486,9 +1856,8 @@
         bio: "Indie hacker. Launching a new developer tool for PostgreSQL metrics monitoring. Seeking low-budget initial users.",
         reason: "Asking on r/sales how to source developer leads who are actively discussing scaling pain points online.",
         drafts: {
-          Professional: "Hi David, saw your post on r/sales. Solopreneurs use LeadSnapper to identify developers discussing database bottlenecks on Twitter & Reddit, allowing you to reach out when intent is highest.",
-          Humor: "David, cold emailing database devs is like trying to explain SQL to a cat. Let's sniper-target engineers who are actually complaining about database speed right now.",
-          Director: "David, the first 100 users are closed via context, not ads. Let's find your core champions on active channels and write the exact value-first message they need to read."
+          ShortOpener: "Hi David, saw your post on r/sales. Solopreneurs use LeadSnapper to identify developers discussing database bottlenecks on Twitter & Reddit, allowing you to reach out when intent is highest.",
+          LinkedInRequest: "David, cold emailing database devs is like trying to explain SQL to a cat. Let's zero-in on engineers who are actually complaining about database speed right now."
         }
       },
       {
@@ -1504,15 +1873,14 @@
         bio: "Talent Acquisition Director. Sourcing senior Rust developers for cloud engineering projects.",
         reason: "Friction with agency recruiting fee markups. Looking for direct social-scraping and automated candidate qualification tools.",
         drafts: {
-          Professional: "Hello Elena, we noticed your post on agency fees. LeadSnapper helps in sourcing high-intent technical talent active in specialized social communities with direct, personalized pitches.",
-          Humor: "Elena, bypass the recruiter fee tax. Find developers who are sharing side projects online and snipe them with tailored outreaches before agencies charge you 20% of their salary.",
-          Director: "Elena, talent acquisition is a game of direct relevance. Let's build a bridge between active developers and your hiring pipeline with targeted, context-rich outreach."
+          ShortOpener: "Hello Elena, we noticed your post on agency fees. LeadSnapper helps in sourcing high-intent technical talent active in specialized social communities with direct, personalized pitches.",
+          LinkedInRequest: "Elena, bypass the recruiter fee tax. Find developers who are sharing side projects online and engage them with tailored outreaches before agencies charge you 20% of their salary."
         }
       }
     ];
 
     let selectedTargetId = 0;
-    let selectedTab = "Professional";
+    let selectedTab = "ShortOpener";
 
     // 2. DOM Elements
     const canvas = document.getElementById("radarCanvas");
@@ -1822,6 +2190,29 @@
         if (!isActive) {
           item.classList.add("active");
           answer.style.maxHeight = answer.scrollHeight + "px";
+        }
+      });
+    });
+
+    // 10. Smooth Scroll with Dynamic Header Height
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          const header = document.querySelector('header');
+          const headerHeight = header ? header.offsetHeight : 80;
+          const elementPosition = targetElement.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerHeight;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+          
+          history.pushState(null, null, targetId);
         }
       });
     });

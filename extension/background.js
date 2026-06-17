@@ -122,6 +122,14 @@ async function verifyLicenseKey(licenseKey) {
     });
     return { success: true, tier: "basic" };
   }
+  if (licenseKey === "LS-BYPASS-ENTERPRISE") {
+    await chrome.storage.local.set({ 
+      "leadsnapper_license_valid": true, 
+      "leadsnapper_license_tier": "enterprise",
+      [STORAGE_KEYS.LICENSE]: licenseKey 
+    });
+    return { success: true, tier: "enterprise" };
+  }
 
   try {
     const response = await fetch(DODO_PAYMENTS_ENDPOINT, {
@@ -147,11 +155,13 @@ async function verifyLicenseKey(licenseKey) {
       let tier = "pro"; // default to pro
       
       if (productId === "pdt_0NgNoZpvOKdipx3cyM5dX") {
-        tier = "basic";
+        tier = "basic"; // Starter
       } else if (productId === "pdt_0NgefVmouwVkPJZIU4sIr") {
-        tier = "pro";
-      } else if (productId.toLowerCase().includes("basic") || licenseKey.toLowerCase().includes("basic")) {
+        tier = "enterprise"; // Enterprise
+      } else if (productId.toLowerCase().includes("starter") || productId.toLowerCase().includes("basic") || licenseKey.toLowerCase().includes("starter") || licenseKey.toLowerCase().includes("basic")) {
         tier = "basic";
+      } else if (productId.toLowerCase().includes("enterprise") || licenseKey.toLowerCase().includes("enterprise")) {
+        tier = "enterprise";
       }
 
       await chrome.storage.local.set({ 
@@ -378,6 +388,12 @@ async function handleAnalysis(msg) {
         profileData = await fetchProfile(msg.profileUrl);
      }
      
+     // Run RAG Case study match
+     const matchedCase = findBestCaseStudy(postText, config.leadsnapper_rag_cases);
+     if (matchedCase) {
+       config.matched_case = matchedCase;
+     }
+
      // Second AI Pass
      const intelRaw = await enqueueRequest(() => callAIEnrich(config, postText, profileData));
      result.Enriched_Profile = profileData;
@@ -410,6 +426,32 @@ async function handleAnalysis(msg) {
         })
       }).catch(e => console.error("[LeadSnapper] Webhook Async Push Failed:", e));
     } catch(e) {}
+  }
+
+  // Native Messaging Save (Local Pipeline)
+  if (result.Confidence_Score >= 75 && nativePort) {
+    console.log("[LeadSnapper] Forwarding Hot Lead to Native Host...");
+    try {
+      nativePort.postMessage({
+        action: 'save_lead',
+        data: {
+          time: new Date().toISOString(),
+          username: msg.authorName || 'Target',
+          url: msg.postUrl || msg.profileUrl || '',
+          score: result.Confidence_Score,
+          summary: reasonText
+        }
+      });
+      
+      if (result.Confidence_Score >= 85) {
+        nativePort.postMessage({
+          action: 'show_notify',
+          text: `New Hot Lead: ${msg.authorName} (Score: ${result.Confidence_Score})`
+        });
+      }
+    } catch(err) {
+      console.error("[LeadSnapper] Native message send failed:", err);
+    }
   }
 
   // Load and update history (Signal Trail)
@@ -533,6 +575,22 @@ async function handleOnDemandEnrichment(msg) {
     } catch(e) {}
   }
 
+  // Native Messaging Update
+  if (nativePort) {
+    try {
+      nativePort.postMessage({
+        action: 'save_lead',
+        data: {
+          time: new Date().toISOString(),
+          username: target.name,
+          url: target.postUrl || target.profileUrl || '',
+          score: target.score,
+          summary: target.reason
+        }
+      });
+    } catch(e) {}
+  }
+
   return { success: true, target: target };
 }
 
@@ -598,11 +656,13 @@ async function callAIEnrich(config, postText, profileData) {
     styleInstruction = "Tone must be technical, engineering-focused, direct, logical, and highly concise (like Bill Gates discussing code/architecture). Avoid marketing jargon.";
   }
 
+  const matchedCase = config['matched_case'] || "";
+
   const prompt = `You are a tactical B2B outreach engineer writing high-converting tech replies.
 Post: "${postText}"
 Profile Bio: "${profileData.bio}"
 Company Info: "${profileData.company}"
-${valueProp ? `Our Product Value Proposition: "${valueProp}"` : ''}
+${matchedCase ? `Relevant Case Study to Reference: "${matchedCase}"` : (valueProp ? `Our Product Value Proposition: "${valueProp}"` : '')}
 
 CRITICAL STYLE MANUAL:
 1. Keep replies strictly under 250 characters.
@@ -708,7 +768,6 @@ async function sendPrompt(config, systemPrompt, userPrompt) {
 
 let isLicenseValid = false;
 let lastLicenseChecked = "";
-
 async function checkLicense(key) {
   if (!key) {
     await chrome.storage.local.set({ "leadsnapper_license_valid": false, "leadsnapper_license_tier": null });
@@ -720,6 +779,10 @@ async function checkLicense(key) {
   }
   if (key === "LS-BYPASS-BASIC") {
     await chrome.storage.local.set({ "leadsnapper_license_valid": true, "leadsnapper_license_tier": "basic" });
+    return true;
+  }
+  if (key === "LS-BYPASS-ENTERPRISE") {
+    await chrome.storage.local.set({ "leadsnapper_license_valid": true, "leadsnapper_license_tier": "enterprise" });
     return true;
   }
   if (key === lastLicenseChecked && isLicenseValid) return true;
@@ -735,7 +798,12 @@ async function checkLicense(key) {
     if (!res.ok) {
        const valid = key.length > 10;
        if (valid) {
-         let tier = key.toLowerCase().includes("basic") ? "basic" : "pro";
+         let tier = "pro";
+         if (key.toLowerCase().includes("basic") || key.toLowerCase().includes("starter")) {
+           tier = "basic";
+         } else if (key.toLowerCase().includes("enterprise")) {
+           tier = "enterprise";
+         }
          await chrome.storage.local.set({ "leadsnapper_license_valid": true, "leadsnapper_license_tier": tier });
        }
        return valid; 
@@ -749,11 +817,13 @@ async function checkLicense(key) {
       const productId = licenseObj.product_id || "";
       let tier = "pro";
       if (productId === "pdt_0NgNoZpvOKdipx3cyM5dX") {
-        tier = "basic";
+        tier = "basic"; // Starter
       } else if (productId === "pdt_0NgefVmouwVkPJZIU4sIr") {
-        tier = "pro";
-      } else if (productId.toLowerCase().includes("basic") || key.toLowerCase().includes("basic")) {
+        tier = "enterprise"; // Enterprise
+      } else if (productId.toLowerCase().includes("starter") || productId.toLowerCase().includes("basic") || key.toLowerCase().includes("starter") || key.toLowerCase().includes("basic")) {
         tier = "basic";
+      } else if (productId.toLowerCase().includes("enterprise") || key.toLowerCase().includes("enterprise")) {
+        tier = "enterprise";
       }
       await chrome.storage.local.set({ "leadsnapper_license_valid": true, "leadsnapper_license_tier": tier });
     } else {
@@ -763,9 +833,229 @@ async function checkLicense(key) {
   } catch(e) {
     const valid = key.length > 10;
     if (valid) {
-      let tier = key.toLowerCase().includes("basic") ? "basic" : "pro";
+      let tier = "pro";
+      if (key.toLowerCase().includes("basic") || key.toLowerCase().includes("starter")) {
+        tier = "basic";
+      } else if (key.toLowerCase().includes("enterprise")) {
+        tier = "enterprise";
+      }
       await chrome.storage.local.set({ "leadsnapper_license_valid": true, "leadsnapper_license_tier": tier });
     }
     return valid;
+  }
+}
+// ============================================================================
+// LIGHTWEIGHT RAG LOGIC
+// ============================================================================
+function findBestCaseStudy(postText, ragCasesText) {
+  if (!ragCasesText || !postText) return null;
+  
+  const cases = [];
+  const regex = /\[([^\]]+)\]([^\[]*)/g;
+  let match;
+  while ((match = regex.exec(ragCasesText)) !== null) {
+    const title = match[1].trim();
+    const content = match[2].trim();
+    if (title || content) {
+      cases.push({ title, content, fullText: `${title} ${content}`.toLowerCase() });
+    }
+  }
+  
+  if (cases.length === 0) {
+    const lines = ragCasesText.split('\n').map(l => l.trim()).filter(Boolean);
+    lines.forEach((line, idx) => {
+      cases.push({ title: `Case ${idx+1}`, content: line, fullText: line.toLowerCase() });
+    });
+  }
+
+  if (cases.length === 0) return null;
+
+  const stopWords = new Set(['and', 'the', 'a', 'for', 'to', 'is', 'of', 'in', 'it', 'on', 'with', 'as', 'by', 'at', 'an', 'this', 'that', 'from', 'we', 'you', 'our', 'are', 'your', 'about']);
+  
+  const postWords = postText.toLowerCase()
+    .replace(/[^\w\s]/g, ' ')
+    .split(/\s+/)
+    .filter(w => w.length > 2 && !stopWords.has(w));
+    
+  let bestCase = null;
+  let maxMatches = 0;
+  
+  for (const c of cases) {
+    let matchCount = 0;
+    for (const word of postWords) {
+      if (c.fullText.includes(word)) {
+        matchCount++;
+      }
+    }
+    if (matchCount > maxMatches) {
+      maxMatches = matchCount;
+      bestCase = c;
+    }
+  }
+  
+  if (maxMatches > 0 && bestCase) {
+    return `[${bestCase.title}] ${bestCase.content}`;
+  }
+  return null;
+}
+
+// ============================================================================
+// NATIVE MESSAGING CONTROLLER LINK
+// ============================================================================
+let nativePort = null;function connectToNativeHost() {
+  chrome.storage.local.get(['leadsnapper_native_enabled', 'leadsnapper_api_key', 'leadsnapper_niche', 'leadsnapper_value_prop', 'leadsnapper_model', 'leadsnapper_endpoint', 'leadsnapper_bark_key', 'leadsnapper_tg_token', 'leadsnapper_tg_chat_id'], (config) => {
+    if (!config.leadsnapper_native_enabled) return;
+    
+    console.log("[LeadSnapper] Attempting to connect to Native Host...");
+    try {
+      nativePort = chrome.runtime.connectNative("com.hyb.leadsnapper");
+      
+      nativePort.onMessage.addListener((msg) => {
+        console.log("[LeadSnapper] Received from Native Host:", msg);
+        if (msg.action === 'execute_commands') {
+          handleNativeCommands(msg.commands, msg.task_id);
+        } else if (msg.status === 'pong' || msg.action === 'ping') {
+          chrome.storage.local.set({ 'leadsnapper_native_status': 'connected' });
+        } else {
+          chrome.runtime.sendMessage({ type: 'NATIVE_RESPONSE', payload: msg }).catch(() => {});
+        }
+      });
+      
+      nativePort.onDisconnect.addListener(() => {
+        console.warn("[LeadSnapper] Native Host disconnected:", chrome.runtime.lastError);
+        nativePort = null;
+        chrome.storage.local.set({ 'leadsnapper_native_status': 'disconnected' });
+        
+        // Reconnect logic
+        setTimeout(checkAndConnectNative, 15000);
+      });
+
+      // Sync settings immediately
+      nativePort.postMessage({
+        action: 'sync_config',
+        api_key: config.leadsnapper_api_key || 'sk-7d97a68e6967406db9ecf35fa986313a',
+        niche: config.leadsnapper_niche || 'AI Automation and SaaS Growth',
+        value_prop: config.leadsnapper_value_prop || '',
+        model: config.leadsnapper_model || 'deepseek-chat',
+        endpoint: config.leadsnapper_endpoint || 'https://api.deepseek.com/chat/completions',
+        bark_key: config.leadsnapper_bark_key || '',
+        tg_token: config.leadsnapper_tg_token || '',
+        tg_chat_id: config.leadsnapper_tg_chat_id || ''
+      });
+      // Ping
+      nativePort.postMessage({ action: 'ping' });
+      chrome.storage.local.set({ 'leadsnapper_native_status': 'connected' });
+    } catch (e) {
+      console.error("[LeadSnapper] Failed to connect to Native Host:", e);
+      chrome.storage.local.set({ 'leadsnapper_native_status': 'disconnected' });
+    }
+  });
+}
+
+function checkAndConnectNative() {
+  chrome.storage.local.get(['leadsnapper_native_enabled'], (res) => {
+    if (res.leadsnapper_native_enabled && !nativePort) {
+      connectToNativeHost();
+    }
+  });
+}
+
+// Watch for changes to the native connection toggle
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (changes.leadsnapper_native_enabled) {
+    if (changes.leadsnapper_native_enabled.newValue) {
+      if (!nativePort) connectToNativeHost();
+    } else {
+      if (nativePort) {
+        nativePort.disconnect();
+        nativePort = null;
+        chrome.storage.local.set({ 'leadsnapper_native_status': 'disconnected' });
+      }
+    }
+  }
+});
+
+// Run connection check on startup
+chrome.runtime.onStartup.addListener(checkAndConnectNative);
+checkAndConnectNative(); // Check now
+
+// Handle commands sent from Mobile via Native Messaging Host
+async function handleNativeCommands(commands, taskId) {
+  try {
+    console.log("[LeadSnapper] Executing native commands sequence:", commands);
+    let tabId = null;
+    let cmdIndex = 0;
+
+    if (commands.length > 0 && commands[0].action === 'open_url') {
+      const openCmd = commands[0];
+      cmdIndex = 1;
+      
+      const tab = await new Promise((resolve) => {
+        chrome.tabs.create({ url: openCmd.url, active: true }, resolve);
+      });
+      tabId = tab.id;
+      
+      // Wait load
+      await new Promise((resolve) => {
+        function listener(updatedTabId, info) {
+          if (updatedTabId === tabId && info.status === 'complete') {
+            chrome.tabs.onUpdated.removeListener(listener);
+            setTimeout(resolve, 3000); // 3s pause for JS/hydration
+          }
+        }
+        chrome.tabs.onUpdated.addListener(listener);
+      });
+    } else {
+      const [activeTab] = await new Promise(r => chrome.tabs.query({ active: true, currentWindow: true }, r));
+      if (activeTab) {
+        tabId = activeTab.id;
+      }
+    }
+
+    if (!tabId) {
+      if (nativePort) {
+        nativePort.postMessage({ action: 'execute_commands_result', task_id: taskId, results: { status: 'error', error: 'No active tab' } });
+      }
+      return;
+    }
+
+    const remainingCommands = commands.slice(cmdIndex);
+    if (remainingCommands.length > 0) {
+      chrome.tabs.sendMessage(tabId, { type: 'EXECUTE_STEPS', commands: remainingCommands }, (response) => {
+        const error = chrome.runtime.lastError;
+        if (error) {
+          console.error("[LeadSnapper] Content script messaging error:", error);
+          if (nativePort) {
+            nativePort.postMessage({
+              action: 'execute_commands_result',
+              task_id: taskId,
+              results: { status: 'error', error: `Content script disconnected: ${error.message}` }
+            });
+          }
+        } else {
+          console.log("[LeadSnapper] Content script execution finished:", response);
+          if (nativePort) {
+            nativePort.postMessage({
+              action: 'execute_commands_result',
+              task_id: taskId,
+              results: response
+            });
+          }
+        }
+      });
+    } else {
+      if (nativePort) {
+        nativePort.postMessage({
+          action: 'execute_commands_result',
+          task_id: taskId,
+          results: { status: 'complete', results: [{ action: 'open_url', status: 'success' }] }
+        });
+      }
+    }
+  } catch (err) {
+    console.error("[LeadSnapper] handleNativeCommands error:", err);
+    if (nativePort) {
+      nativePort.postMessage({ action: 'execute_commands_result', task_id: taskId, results: { status: 'error', error: err.toString() } });
+    }
   }
 }

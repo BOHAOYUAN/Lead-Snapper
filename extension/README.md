@@ -1,10 +1,10 @@
-# 🎯 LeadSnapper — B2B Social Intent Radar & One-Click AI Outreach
+# 🎯 LeadSnapper V2.0 — Turn Your Computer Into a 24/7 AI Sales Employee
 
 [![LeadSnapper Banner](leadsnapper_large_promo_tile.png)](https://bohaoyuan.github.io/Lead-Snapper/)
 
 > Hey, I'm Bohao, the developer of LeadSnapper.  
 > I built this tool because I was sick and tired of manually scrolling through social feeds to find B2B leads. My hands were about to fall off, and my efficiency was garbage.  
-> So I wrote this local-first AI intent radar. **It's 100% transparent: your API keys, credentials, and leads are saved directly in your browser's local storage. I can never touch them.**
+> So I wrote this 24/7 AI sales worker system. It runs local browser RPA sequences to find active buyers on Twitter, LinkedIn, and Reddit, qualifies prospects using custom RAG rules, and pushes them directly to your phone via Bark or Telegram Bot. **It's 100% transparent: your API keys, credentials, and leads are saved directly in your local system. I can never touch them.**
 
 ---
 
@@ -15,6 +15,7 @@
 3. **Developer Mode:** Toggle **ON** the "Developer mode" switch in the top-right corner.
 4. **Load Unpacked:** Click **"Load unpacked"** in the top-left and select the extracted `LeadSnapper/` folder (the one containing `manifest.json`).
 5. **Pin It:** Click the puzzle icon in your browser toolbar and pin **LeadSnapper** for easy access.
+6. **Native Host:** Run `register.bat` inside the directory to register the local python messaging host.
 
 For a full step-by-step onboarding walkthrough, read the [📖 LeadSnapper User Manual](LeadSnapper-Documentation.md).
 
@@ -58,19 +59,22 @@ LeadSnapper operates with a strict **local-first architecture**:
 
 Choose the early-adopter lifetime license that matches your growth velocity before we transition to monthly subscription fees:
 
-| Feature / Metric | LTD Basic — $199 | LTD Pro — $588 (🔥 Only 7 Left) |
-| :--- | :---: | :---: |
-| **Daily Outreach Drafts** | 15 / day | **Unlimited** |
-| **Auto-Snapper Mode** | ✅ | ✅ |
-| **Auto-Pilot Mode** | ❌ | **✅ (Unlocked)** |
-| **3D Concentric Radar Grid** | ❌ | **✅ (Unlocked)** |
-| **Ultra-Snapper Background Auto-Capture** | ❌ | **✅ (Unlocked)** |
-| **Support SLA** | General | **Priority Setup & 24h Response** |
-| **Configuration Audit** | ❌ | **✅ Free 1-on-1 Niche Calibrator (Value $99)** |
-| **Updates Coverage** | 12 Months Free Updates | **12 Months Free (Keep software working forever)** |
+| Feature / Metric | LTD Starter — $199 | LTD Pro — $388 (🔥 Most Popular) | LTD Enterprise — $588 (🏢 Premium) |
+| :--- | :---: | :---: | :---: |
+| **Daily Outreach Drafts** | 50 / day | **Unlimited** | **Unlimited** |
+| **Auto-Snapper Mode** | ✅ | ✅ | ✅ |
+| **3D Concentric Radar Grid** | ❌ | **✅ (Unlocked)** | **✅ (Unlocked)** |
+| **Local RAG Matching** | ❌ | **✅ (Unlocked)** | **✅ (Unlocked)** |
+| **Mobile PWA Remote** | ❌ | **✅ (Unlocked)** | **✅ (Unlocked)** |
+| **Bark & Telegram Alerts** | ❌ | **✅ (Unlocked)** | **✅ (Unlocked)** |
+| **Background Daemon (GUI-less)** | ❌ | ❌ | **✅ (Unlocked)** |
+| **Active Devices** | 1 Device | 3 Devices | **Unlimited Devices** |
+| **Configuration Audit** | ❌ | ❌ | **✅ Free 1-on-1 Setup Coaching** |
+| **Support SLA** | General | Priority | **Direct Founders Pipeline** |
+| **Updates Coverage** | 12 Months Free Updates | 12 Months Free (Software continues indefinitely) | **Lifetime Updates (Free Forever)** |
 
 > [!TIP]
-> **PRO Update Policy:** After 12 months, the software continues working indefinitely. If you want another year of updates (adapting to new social channel layouts, new platform integrations, and advanced model releases), renew updates at **20% of your original purchase price** — or stay on the last version forever.
+> **PRO Update Policy:** After 12 months, the software continues working indefinitely. If you want another year of updates (adapting to new social channel layouts, new platform integrations, and advanced model releases), renew updates at **20% of your original purchase price** — or stay on the last version forever. (Enterprise tier includes free lifetime updates).
 
 ---
 
@@ -109,3 +113,22 @@ If you do not close at least one high-value client using LeadSnapper within 30 d
 ## 📬 Contact & Support
 *   **Developer Team:** HY Digital Studio ([hy@hydigital.studio](mailto:hy@hydigital.studio))
 *   **Merchant Support:** Dodo Payments (support@dodopayments.com)
+
+---
+
+## 👨‍💻 About the Developer
+
+<p align="center">
+  <img src="haoyuan.jpg" alt="Haoyuan Bo" width="130" style="border-radius: 50%;" />
+</p>
+
+Hi, I'm **Haoyuan Bo** (known as Bohao Yuan), a B2B growth engineer and the creator of LeadSnapper. I specialize in building custom automation pipelines, browser extensions, and semantic search systems to help solo founders, digital agencies, and B2B sales teams streamline their outbound operations.
+
+If you have any feedback, custom feature requests, or need help setting up your outbound campaign, feel free to reach out to me directly!
+
+### Connect with Me:
+*   **LinkedIn:** [haoyuan-bo-127908392](https://www.linkedin.com/in/haoyuan-bo-127908392/)
+*   **Twitter/X:** [@bo_haoyuan94776](https://x.com/bo_haoyuan94776)
+*   **Reddit:** [Icy_Antelope_2961](https://www.reddit.com/user/Icy_Antelope_2961/)
+*   **Facebook:** [Haoyuan Bo](https://www.facebook.com/profile.php?id=100091837667555)
+*   **Email:** [haoyuanbo626@gmail.com](mailto:haoyuanbo626@gmail.com)

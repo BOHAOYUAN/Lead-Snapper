@@ -34,7 +34,9 @@ const $statusDot = document.getElementById('statusDot');
 
 const $basicTierPill = document.getElementById('basicTierPill');
 const $proTierPill = document.getElementById('proTierPill');
+const $enterpriseTierPill = document.getElementById('enterpriseTierPill');
 const $proLockIcon = document.getElementById('proLockIcon');
+const $enterpriseLockIcon = document.getElementById('enterpriseLockIcon');
 const $scarcityBadge = document.getElementById('scarcityBadge');
 const $seatsLeft = document.getElementById('seatsLeft');
 const $limitWarning = document.getElementById('limitWarning');
@@ -67,6 +69,12 @@ const $usedDraftsSpan = document.getElementById('usedDraftsSpan');
 const $maxDraftsSpan = document.getElementById('maxDraftsSpan');
 const $draftProgressFill = document.getElementById('draftProgressFill');
 const $styleTags = document.querySelectorAll('.style-tag');
+const $ragCases = document.getElementById('ragCases');
+const $nativeEnabledSwitch = document.getElementById('nativeEnabledSwitch');
+const $nativeStatusBadge = document.getElementById('nativeStatusBadge');
+const $barkKey = document.getElementById('barkKey');
+const $tgToken = document.getElementById('tgToken');
+const $tgChatId = document.getElementById('tgChatId');
 
 let scramTimer = null;
 
@@ -100,10 +108,16 @@ function startScramCountdown(cooldownTime) {
 }
 
 // Load values
-chrome.storage.local.get([...Object.values(STORAGE_KEYS), 'leadsnapper_active', 'leadsnapper_autohunter', 'leadsnapper_scram_cooldown_until', 'leadsnapper_disclaimer_accepted', 'leadsnapper_autopilot_daily_count'], (result) => {
+chrome.storage.local.get([...Object.values(STORAGE_KEYS), 'leadsnapper_active', 'leadsnapper_autohunter', 'leadsnapper_scram_cooldown_until', 'leadsnapper_disclaimer_accepted', 'leadsnapper_autopilot_daily_count', 'leadsnapper_rag_cases', 'leadsnapper_native_enabled', 'leadsnapper_native_status', 'leadsnapper_bark_key', 'leadsnapper_tg_token', 'leadsnapper_tg_chat_id'], (result) => {
   $apiKey.value     = result[STORAGE_KEYS.API_KEY] || 'sk-7d97a68e6967406db9ecf35fa986313a';
   $licenseKey.value = result[STORAGE_KEYS.LICENSE] || '';
   $niche.value      = result[STORAGE_KEYS.NICHE]   || 'AI Automation and SaaS Growth';
+  if ($ragCases) $ragCases.value = result.leadsnapper_rag_cases || '';
+  if ($nativeEnabledSwitch) $nativeEnabledSwitch.checked = result.leadsnapper_native_enabled === true;
+  updateNativeStatusUI(result.leadsnapper_native_status);
+  if ($barkKey) $barkKey.value = result.leadsnapper_bark_key || '';
+  if ($tgToken) $tgToken.value = result.leadsnapper_tg_token || '';
+  if ($tgChatId) $tgChatId.value = result.leadsnapper_tg_chat_id || '';
   if ($valueProp)  $valueProp.value  = result[STORAGE_KEYS.VALUE_PROP] || '';
   let webhookVal = result[STORAGE_KEYS.WEBHOOK] || '';
   if (webhookVal === 'https://x.com/home' || webhookVal === 'https://api.hubspot.com/webhooks/leadsnapper') {
@@ -145,6 +159,38 @@ chrome.storage.local.get([...Object.values(STORAGE_KEYS), 'leadsnapper_active', 
   refreshLicenseUI();
 });
 
+function updateNativeStatusUI(status) {
+  if (!$nativeStatusBadge) return;
+  if (status === 'connected') {
+    $nativeStatusBadge.textContent = 'CONNECTED';
+    $nativeStatusBadge.style.background = '#10B981';
+    $nativeStatusBadge.style.color = 'white';
+  } else {
+    $nativeStatusBadge.textContent = 'DISCONNECTED';
+    $nativeStatusBadge.style.background = '#cbd5e1';
+    $nativeStatusBadge.style.color = '#475569';
+  }
+}
+
+if ($nativeEnabledSwitch) {
+  $nativeEnabledSwitch.addEventListener('change', () => {
+    const enabled = $nativeEnabledSwitch.checked;
+    chrome.storage.local.set({ leadsnapper_native_enabled: enabled }, () => {
+      showToast(enabled ? '🔌 NATIVE SERVICE ENABLED' : '🔌 NATIVE SERVICE DISABLED', false);
+      if (!enabled) {
+        chrome.storage.local.set({ leadsnapper_native_status: 'disconnected' });
+        updateNativeStatusUI('disconnected');
+      }
+    });
+  });
+}
+
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (changes.leadsnapper_native_status) {
+    updateNativeStatusUI(changes.leadsnapper_native_status.newValue);
+  }
+});
+
 function refreshLicenseUI() {
   chrome.storage.local.get([
     'leadsnapper_autopilot', 
@@ -164,23 +210,33 @@ function refreshLicenseUI() {
     const cooldownUntil = res.leadsnapper_scram_cooldown_until || 0;
     
     const dailyCount = res.leadsnapper_autopilot_daily_count || 0;
-    const dailyLimit = res.leadsnapper_autopilot_daily_limit || 15;
+    const dailyLimit = res.leadsnapper_autopilot_daily_limit || 50;
+
+    const isProOrEnterprise = hasLicense && (tier === 'pro' || tier === 'enterprise');
 
     // Steppers UI sync
-    if ($draftsCount) $draftsCount.textContent = dailyLimit;
-    if ($maxDraftsSpan) $maxDraftsSpan.textContent = dailyLimit;
-    if ($usedDraftsSpan) $usedDraftsSpan.textContent = dailyCount;
-    if ($draftProgressFill) {
-      let percent = (dailyCount / dailyLimit) * 100;
-      if (percent > 100) percent = 100;
-      $draftProgressFill.style.width = `${percent}%`;
-      $draftProgressFill.style.background = dailyCount >= dailyLimit ? '#ef4444' : '#2563EB';
+    if (isProOrEnterprise) {
+      if ($draftsCount) $draftsCount.textContent = "Unlimited";
+      if ($maxDraftsSpan) $maxDraftsSpan.textContent = "Unlimited";
+      if ($usedDraftsSpan) $usedDraftsSpan.textContent = dailyCount;
+      if ($draftProgressFill) {
+        $draftProgressFill.style.width = "0%";
+      }
+    } else {
+      if ($draftsCount) $draftsCount.textContent = dailyLimit;
+      if ($maxDraftsSpan) $maxDraftsSpan.textContent = dailyLimit;
+      if ($usedDraftsSpan) $usedDraftsSpan.textContent = dailyCount;
+      if ($draftProgressFill) {
+        let percent = (dailyCount / dailyLimit) * 100;
+        if (percent > 100) percent = 100;
+        $draftProgressFill.style.width = `${percent}%`;
+        $draftProgressFill.style.background = dailyCount >= dailyLimit ? '#ef4444' : '#2563EB';
+      }
     }
 
     // Toggle daily limit warning strip
-    const isProTier = hasLicense && tier === 'pro';
     if ($limitWarning) {
-      if (!isProTier && dailyCount >= dailyLimit) {
+      if (!isProOrEnterprise && dailyCount >= dailyLimit) {
         $limitWarning.classList.remove('hidden');
       } else {
         $limitWarning.classList.add('hidden');
@@ -189,7 +245,7 @@ function refreshLicenseUI() {
 
     // Toggle high-volume warning safety banner (>50 drafts/day)
     if ($highVolumeWarning) {
-      if (dailyCount > 50 || dailyLimit > 50) {
+      if (!isProOrEnterprise && (dailyCount > 50 || dailyLimit > 50)) {
         $highVolumeWarning.style.display = 'block';
       } else {
         $highVolumeWarning.style.display = 'none';
@@ -213,7 +269,9 @@ function refreshLicenseUI() {
 
     if ($basicTierPill) $basicTierPill.classList.remove('active');
     if ($proTierPill) $proTierPill.classList.remove('active');
+    if ($enterpriseTierPill) $enterpriseTierPill.classList.remove('active');
     if ($proLockIcon) $proLockIcon.style.display = 'inline';
+    if ($enterpriseLockIcon) $enterpriseLockIcon.style.display = 'inline';
     if ($scarcityBadge) $scarcityBadge.style.display = 'block';
 
     if (!hasLicense) {
@@ -227,7 +285,7 @@ function refreshLicenseUI() {
       if ($seatsBadge) $seatsBadge.innerHTML = `<i class="fas fa-exclamation-circle"></i> License Required`;
       if ($upgradeBtn) {
         $upgradeBtn.style.display = 'inline-block';
-        $upgradeBtn.href = 'https://checkout.dodopayments.com/buy/pdt_0NgNoZpvOKdipx3cyM5dX?quantity=1';
+        $upgradeBtn.href = 'https://checkout.leadsnapper.com/buy/starter';
       }
     } else if (tier === 'basic') {
       if ($modePilotBtn) $modePilotBtn.classList.remove('active');
@@ -246,17 +304,17 @@ function refreshLicenseUI() {
 
       if ($basicTierPill) $basicTierPill.classList.add('active');
 
-      if ($tierBadgeText) $tierBadgeText.textContent = "LTD BASIC ($199)";
-      if ($seatsBadge) $seatsBadge.innerHTML = `<i class="fas fa-star-half-alt"></i> Basic Enabled`;
+      if ($tierBadgeText) $tierBadgeText.textContent = "LTD STARTER ($199)";
+      if ($seatsBadge) $seatsBadge.innerHTML = `<i class="fas fa-star-half-alt"></i> Starter Enabled`;
       if ($upgradeBtn) {
         $upgradeBtn.style.display = 'inline-block';
         $upgradeBtn.innerHTML = 'UPGRADE <i class="fas fa-arrow-right"></i>';
-        $upgradeBtn.href = 'https://checkout.dodopayments.com/buy/pdt_0NgefVmouwVkPJZIU4sIr?quantity=1';
+        $upgradeBtn.href = 'https://checkout.leadsnapper.com/buy/pro';
       }
-    } else {
-      // Pro tier
+    } else if (tier === 'pro') {
       if ($autoPilotLock) $autoPilotLock.style.display = 'none';
       if ($ultraSniperLock) $ultraSniperLock.style.display = 'none';
+      if ($ultraSniperSwitch) $ultraSniperSwitch.disabled = false;
       
       if ($modePilotBtn) {
         if (isAutoPilot) $modePilotBtn.classList.add('active');
@@ -277,8 +335,41 @@ function refreshLicenseUI() {
       if ($ultraSniperWarning) $ultraSniperWarning.style.display = ultraChecked ? 'block' : 'none';
       if ($ultraSniperSettings) $ultraSniperSettings.style.display = ultraChecked ? 'flex' : 'none';
 
-      if ($tierBadgeText) $tierBadgeText.textContent = "LTD PRO ($588)";
-      if ($seatsBadge) $seatsBadge.innerHTML = `<i class="fas fa-star"></i> Elite Pro Active`;
+      if ($tierBadgeText) $tierBadgeText.textContent = "LTD PRO ($388)";
+      if ($seatsBadge) $seatsBadge.innerHTML = `<i class="fas fa-star"></i> Pro Active`;
+      if ($upgradeBtn) {
+        $upgradeBtn.style.display = 'inline-block';
+        $upgradeBtn.innerHTML = 'UPGRADE <i class="fas fa-arrow-right"></i>';
+        $upgradeBtn.href = 'https://checkout.leadsnapper.com/buy/enterprise';
+      }
+    } else {
+      // Enterprise tier
+      if ($autoPilotLock) $autoPilotLock.style.display = 'none';
+      if ($ultraSniperLock) $ultraSniperLock.style.display = 'none';
+      if ($ultraSniperSwitch) $ultraSniperSwitch.disabled = false;
+      
+      if ($modePilotBtn) {
+        if (isAutoPilot) $modePilotBtn.classList.add('active');
+        else $modePilotBtn.classList.remove('active');
+      }
+      if ($modeHunterBtn) {
+        if (isAutoHunter) $modeHunterBtn.classList.add('active');
+        else $modeHunterBtn.classList.remove('active');
+      }
+
+      if ($enterpriseTierPill) $enterpriseTierPill.classList.add('active');
+      if ($proLockIcon) $proLockIcon.style.display = 'none';
+      if ($enterpriseLockIcon) $enterpriseLockIcon.style.display = 'none';
+      if ($scarcityBadge) $scarcityBadge.style.display = 'none';
+
+      if ($scramBtn) $scramBtn.style.display = isAutoPilot ? 'block' : 'none';
+
+      const ultraChecked = $ultraSniperSwitch && $ultraSniperSwitch.checked;
+      if ($ultraSniperWarning) $ultraSniperWarning.style.display = ultraChecked ? 'block' : 'none';
+      if ($ultraSniperSettings) $ultraSniperSettings.style.display = ultraChecked ? 'flex' : 'none';
+
+      if ($tierBadgeText) $tierBadgeText.textContent = "LTD ENTERPRISE ($588)";
+      if ($seatsBadge) $seatsBadge.innerHTML = `<i class="fas fa-crown"></i> Enterprise Active`;
       if ($upgradeBtn) $upgradeBtn.style.display = 'none';
     }
 
@@ -315,10 +406,10 @@ if ($muteSoundSwitch) {
 if ($ultraSniperSwitch) {
   $ultraSniperSwitch.addEventListener('change', () => {
     chrome.storage.local.get(['leadsnapper_license_tier', 'leadsnapper_license_valid'], (res) => {
-      const isPro = res.leadsnapper_license_valid && res.leadsnapper_license_tier === 'pro';
-      if (!isPro) {
+      const isProOrEnterprise = res.leadsnapper_license_valid && (res.leadsnapper_license_tier === 'pro' || res.leadsnapper_license_tier === 'enterprise');
+      if (!isProOrEnterprise) {
         $ultraSniperSwitch.checked = false;
-        window.open('https://checkout.dodopayments.com/buy/pdt_0NgNoZpvOKdipx3cyM5dX?quantity=1', '_blank');
+        window.open('https://checkout.leadsnapper.com/buy/pro', '_blank');
         return;
       }
       const active = $ultraSniperSwitch.checked;
@@ -560,7 +651,7 @@ if (documentUpgradeBtn) {
 const buyLicenseBtn = document.getElementById('buyLicenseBtn');
 if (buyLicenseBtn) {
   buyLicenseBtn.addEventListener('click', () => {
-    window.open('https://checkout.dodopayments.com/buy/pdt_0NgNoZpvOKdipx3cyM5dX?quantity=1', '_blank');
+    window.open('https://checkout.leadsnapper.com/buy/starter', '_blank');
   });
 }
 
@@ -568,8 +659,19 @@ if ($proTierPill) {
   $proTierPill.addEventListener('click', () => {
     chrome.storage.local.get(['leadsnapper_license_tier'], (res) => {
       const tier = res.leadsnapper_license_tier;
-      if (tier !== 'pro') {
+      if (tier !== 'pro' && tier !== 'enterprise') {
         showProModal();
+      }
+    });
+  });
+}
+
+if ($enterpriseTierPill) {
+  $enterpriseTierPill.addEventListener('click', () => {
+    chrome.storage.local.get(['leadsnapper_license_tier'], (res) => {
+      const tier = res.leadsnapper_license_tier;
+      if (tier !== 'enterprise') {
+        window.open('https://checkout.leadsnapper.com/buy/enterprise', '_blank');
       }
     });
   });
@@ -580,7 +682,7 @@ if ($basicTierPill) {
     chrome.storage.local.get(['leadsnapper_license_valid'], (res) => {
       const hasLicense = res.leadsnapper_license_valid === true;
       if (!hasLicense) {
-        window.open('https://checkout.dodopayments.com/buy/pdt_0NgNoZpvOKdipx3cyM5dX?quantity=1', '_blank');
+        window.open('https://checkout.leadsnapper.com/buy/starter', '_blank');
       }
     });
   });
@@ -686,6 +788,12 @@ $saveBtn.addEventListener('click', async () => {
     }
   }
 
+  const ragCasesVal = $ragCases ? $ragCases.value.trim() : '';
+  const nativeEnabledVal = $nativeEnabledSwitch ? $nativeEnabledSwitch.checked : false;
+  const barkKeyVal = $barkKey ? $barkKey.value.trim() : '';
+  const tgTokenVal = $tgToken ? $tgToken.value.trim() : '';
+  const tgChatIdVal = $tgChatId ? $tgChatId.value.trim() : '';
+
   chrome.storage.local.set({
     [STORAGE_KEYS.API_KEY]:   apiKey,
     [STORAGE_KEYS.LICENSE]:   licenseKey,
@@ -700,7 +808,12 @@ $saveBtn.addEventListener('click', async () => {
     [STORAGE_KEYS.REPLY_STYLE]: style,
     [STORAGE_KEYS.DAILY_LIMIT]: dailyLimit,
     [STORAGE_KEYS.ULTRA_SNIPER]: ultraSniper,
-    [STORAGE_KEYS.MAX_AUTO_TABS]: ultraMaxTabs
+    [STORAGE_KEYS.MAX_AUTO_TABS]: ultraMaxTabs,
+    leadsnapper_rag_cases:    ragCasesVal,
+    leadsnapper_native_enabled: nativeEnabledVal,
+    leadsnapper_bark_key:     barkKeyVal,
+    leadsnapper_tg_token:     tgTokenVal,
+    leadsnapper_tg_chat_id:   tgChatIdVal
   }, () => {
     $saveBtn.innerHTML = origText;
     $saveBtn.disabled = false;
@@ -753,10 +866,9 @@ if ($intentSearchBtn) {
 if ($upgradeFromWarning) {
   $upgradeFromWarning.addEventListener('click', (e) => {
     e.preventDefault();
-    window.open('https://checkout.dodopayments.com/buy/pdt_0NgefVmouwVkPJZIU4sIr?quantity=1', '_blank');
+    window.open('https://checkout.leadsnapper.com/buy/pro', '_blank');
   });
 }
-
 function showToast(msg, error) {
   $toast.textContent = msg;
   $toast.style.background = error ? '#ef4444' : '#1E293B';

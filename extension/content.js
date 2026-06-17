@@ -77,6 +77,15 @@ function safeSendMessage(msg, callback) {
 let isScrammed = false;
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === 'EXECUTE_STEPS' && msg.commands) {
+    executeSteps(msg.commands).then(res => {
+      sendResponse(res);
+    }).catch(err => {
+      sendResponse({ status: 'error', error: err.toString() });
+    });
+    return true; // Keep message channel open for async response
+  }
+
   if (msg.type === 'SCRAM_KILL') {
     console.warn('🛑 [LeadSnapper] SCRAM emergency stop initiated.');
     isScrammed = true;
@@ -1032,18 +1041,18 @@ function processPost(post) {
       post.style.borderLeft = "4px solid #ff2e4c";
       post.style.opacity = "1";
       injectHUD(post, response.Confidence_Score, response.Intelligence_Summary || response.Pain_Point_Analysis, response.Enriched_Profile, response.Replies, 'HOT');
-      
       // AUTO-PILOT INITIATION
       chrome.storage.local.get(['leadsnapper_autopilot', 'leadsnapper_autopilot_threshold', 'leadsnapper_license_valid', 'leadsnapper_license_tier', 'leadsnapper_autopilot_daily_count', 'leadsnapper_autopilot_daily_limit', 'leadsnapper_autopilot_last_reset_date'], (settings) => {
         const autopilotActive = settings.leadsnapper_autopilot === true;
         const threshold = settings.leadsnapper_autopilot_threshold || 85;
         const hasLicense = settings.leadsnapper_license_valid === true;
         const tier = settings.leadsnapper_license_tier || 'basic';
+        const isProOrEnterprise = tier === 'pro' || tier === 'enterprise';
         
-        if (autopilotActive && hasLicense && tier === 'pro' && !document.hidden && !isScrammed && response.Confidence_Score >= threshold) {
+        if (autopilotActive && hasLicense && isProOrEnterprise && !document.hidden && !isScrammed && response.Confidence_Score >= threshold) {
           const today = new Date().toDateString();
           let dailyCount = settings.leadsnapper_autopilot_daily_count || 0;
-          const dailyLimit = settings.leadsnapper_autopilot_daily_limit || 15;
+          const dailyLimit = settings.leadsnapper_autopilot_daily_limit || 50;
           const lastReset = settings.leadsnapper_autopilot_last_reset_date || "";
 
           if (lastReset !== today) {
@@ -1054,8 +1063,7 @@ function processPost(post) {
             });
           }
 
-          if (dailyCount < dailyLimit) {
-            chrome.storage.local.set({ leadsnapper_autopilot_daily_count: dailyCount + 1 });
+          if (isProOrEnterprise || dailyCount < dailyLimit) {
             triggerAutoPilot(post, response.Replies);
           } else {
             console.warn(`[LeadSnapper] Auto-Pilot daily limit of ${dailyLimit} reached. Skipping pre-fill.`);
@@ -1077,7 +1085,6 @@ function processPost(post) {
           }
         }
       });
-
       // AUTO-HUNTER LOCK TRIGGER
       if (IS_AUTO_HUNTER && response.Confidence_Score >= 85) {
         if (!IS_ULTRA_SNIPER) {
@@ -1397,3 +1404,146 @@ try {
     });
   }
 } catch(e) {}
+
+// ============================================================================
+// RPA EXECUTIVE COMMANDS RUNNER
+// ============================================================================
+function extractPostUrl(post) {
+  let postUrl = '';
+  if (PLATFORM === 'X') {
+    const timeLink = post.querySelector('a[href*="/status/"]');
+    if (timeLink) postUrl = timeLink.href;
+  } else if (PLATFORM === 'Reddit') {
+    const link = post.querySelector('a[href*="/comments/"]');
+    if (link) postUrl = link.href.startsWith('http') ? link.href : 'https://www.reddit.com' + link.getAttribute('href');
+  } else if (PLATFORM === 'HN') {
+    const link = post.querySelector('span.titleline > a');
+    if (link) postUrl = link.href;
+  } else if (PLATFORM === 'LinkedIn') {
+    const link = post.querySelector('a[href*="/in/"]');
+    if (link) postUrl = link.href;
+  }
+  return postUrl;
+}
+
+async function executeSteps(commands) {
+  console.log("[LeadSnapper] Starting step execution:", commands);
+  const results = [];
+  
+  for (const cmd of commands) {
+    console.log(`[LeadSnapper] Executing command:`, cmd);
+    try {
+      if (cmd.action === 'scroll') {
+        const pixels = cmd.pixels || 800;
+        window.scrollBy({ top: pixels, behavior: 'smooth' });
+        showExecutionToast(`Scrolling down ${pixels}px...`);
+        await new Promise(r => setTimeout(r, 2000));
+        results.push({ action: 'scroll', status: 'success', pixels });
+      } 
+      else if (cmd.action === 'wait') {
+        const secs = cmd.seconds || 2;
+        showExecutionToast(`Waiting ${secs}s for rendering...`);
+        await new Promise(r => setTimeout(r, secs * 1000));
+        results.push({ action: 'wait', status: 'success', seconds: secs });
+      } 
+      else if (cmd.action === 'click') {
+        showExecutionToast(`Targeting element: ${cmd.selector}`);
+        const el = document.querySelector(cmd.selector);
+        if (el) {
+          const origOutline = el.style.outline;
+          el.style.outline = "3px solid #ff2e4c";
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          await new Promise(r => setTimeout(r, 600));
+          el.style.outline = origOutline;
+          
+          el.click();
+          results.push({ action: 'click', status: 'success', selector: cmd.selector });
+        } else {
+          results.push({ action: 'click', status: 'not_found', selector: cmd.selector });
+        }
+        await new Promise(r => setTimeout(r, 1500));
+      } 
+      else if (cmd.action === 'extract') {
+        showExecutionToast(`Extracting posts via: ${cmd.selector}`);
+        const elements = document.querySelectorAll(cmd.selector);
+        const limit = cmd.limit || 5;
+        const extracted = [];
+        
+        for (let i = 0; i < Math.min(elements.length, limit); i++) {
+          const el = elements[i];
+          
+          const origBorder = el.style.border;
+          el.style.border = "2px solid #ff2e4c";
+          await new Promise(r => setTimeout(r, 200));
+          el.style.border = origBorder;
+          
+          const text = extractText(el);
+          const authorInfo = extractAuthor(el);
+          const postUrl = extractPostUrl(el);
+          
+          safeSendMessage({
+            type: 'ANALYZE_POST',
+            id: el.getAttribute('data-ls-id') || String(Date.now() + i),
+            text: text,
+            authorName: authorInfo.authorName,
+            authorBio: authorInfo.authorBio,
+            profileUrl: authorInfo.profileUrl,
+            postUrl: postUrl
+          });
+          
+          extracted.push({
+            author: authorInfo.authorName,
+            text: text.substring(0, 100) + "..."
+          });
+        }
+        
+        results.push({ action: 'extract', status: 'success', selector: cmd.selector, count: extracted.length, data: extracted });
+      }
+    } catch (e) {
+      console.error("[LeadSnapper] Error in step execution:", e);
+      results.push({ action: cmd.action, status: 'error', error: e.toString() });
+    }
+  }
+  
+  showExecutionToast("Automation sequence complete!");
+  return { status: 'complete', results };
+}
+
+function showExecutionToast(text) {
+  let toast = document.getElementById('ls-execution-status-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'ls-execution-status-toast';
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.95);
+      color: #F8FAFB;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 1000000;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255, 46, 76, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    `;
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `<i class="fas fa-bullseye" style="color: #ff2e4c; animation: ls-pulse 1s infinite;"></i> <span>${text}</span>`;
+  
+  setTimeout(() => {
+    if (toast.innerText.includes(text)) {
+      toast.style.opacity = '0';
+      setTimeout(() => {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 300);
+    }
+  }, 4000);
+}
