@@ -1107,9 +1107,10 @@
       background: radial-gradient(circle at 10% 50%, rgba(59, 130, 246, 0.04) 0%, transparent 60%);
       border-top: 1px solid var(--border-color);
     }
+
     .remote-grid {
       display: grid;
-      grid-template-columns: 0.96fr 1.04fr;
+      grid-template-columns: 0.8fr 1.2fr;
       gap: 60px;
       align-items: center;
     }
@@ -1127,7 +1128,11 @@
       border: 1px solid var(--border-color);
       box-shadow: var(--shadow-card), 0 0 30px rgba(59, 130, 246, 0.05);
       transition: transform 0.3s ease;
+      max-width: 440px;
+      margin: 0 auto;
+      width: 100%;
     }
+
     .remote-mockup-wrap:hover {
       transform: translateY(-4px) scale(1.01);
     }
